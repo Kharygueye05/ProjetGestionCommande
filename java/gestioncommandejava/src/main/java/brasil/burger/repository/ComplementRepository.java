@@ -9,4 +9,6 @@ public interface ComplementRepository {
     Optional<Complement> selectById(int id);
     int update(Complement complement);
     int archive(int id);
+    List<Complement> selectByType(String type);
+    
 }

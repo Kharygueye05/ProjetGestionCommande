@@ -44,4 +44,8 @@ public class ComplementServiceImpl implements ComplementService {
     public boolean archiveComplement(int id) {
         return this.complementRepository.archive(id) != 0;
     }
+    @Override
+    public List<Complement> getComplementsByType(String type) {
+        return this.complementRepository.selectByType(type);
+    }
 }

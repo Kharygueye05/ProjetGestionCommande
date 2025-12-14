@@ -112,4 +112,18 @@ public class ComplementRepositoryBd implements ComplementRepository {
         c.setType(rs.getString("type"));
         return c;
     }
+    @Override
+public List<Complement> selectByType(String type) {
+    Connection conn = database.getConnection();
+    try {
+        PreparedStatement ps = conn.prepareStatement(
+            "SELECT id, nom, image, archive, prix, type FROM complement WHERE archive = false AND type = ?"
+        );
+        ps.setString(1, type);
+        return database.fetchAll(ps, this::toEntity);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return Collections.emptyList();
+}
 }

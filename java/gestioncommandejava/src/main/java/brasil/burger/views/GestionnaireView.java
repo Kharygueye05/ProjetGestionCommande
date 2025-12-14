@@ -1,13 +1,17 @@
 package brasil.burger.views;
+
 import brasil.burger.entity.*;
+import brasil.burger.services.MenuService;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class GestionnaireView {
     private static Scanner scanner = new Scanner(System.in);
-    
-    private GestionnaireView() {}
-    
+
+    private GestionnaireView() {
+    }
+
     public static int menu() {
         System.out.println("\n=== BRASIL BURGER - GESTION ===");
         System.out.println("1. Gestion Burgers");
@@ -19,7 +23,7 @@ public class GestionnaireView {
         scanner.nextLine();
         return choix;
     }
-    
+
     public static int menuBurger() {
         System.out.println("\n=== GESTION BURGERS ===");
         System.out.println("1. Créer un burger");
@@ -32,7 +36,7 @@ public class GestionnaireView {
         scanner.nextLine();
         return choix;
     }
-    
+
     public static int menuComplement() {
         System.out.println("\n=== GESTION COMPLEMENTS ===");
         System.out.println("1. Créer un complément");
@@ -45,7 +49,7 @@ public class GestionnaireView {
         scanner.nextLine();
         return choix;
     }
-    
+
     public static int menuMenu() {
         System.out.println("\n=== GESTION MENUS ===");
         System.out.println("1. Créer un menu");
@@ -58,7 +62,7 @@ public class GestionnaireView {
         scanner.nextLine();
         return choix;
     }
-    
+
     public static Burger saisirBurger() {
         Burger b = new Burger();
         System.out.print("Nom du burger: ");
@@ -71,7 +75,7 @@ public class GestionnaireView {
         b.setArchive(false);
         return b;
     }
-    
+
     public static void afficheBurgers(List<Burger> burgers) {
         if (burgers.isEmpty()) {
             System.out.println("\nAucun burger disponible");
@@ -80,7 +84,7 @@ public class GestionnaireView {
         System.out.println("\n=== LISTE DES BURGERS ===");
         burgers.forEach(System.out::println);
     }
-    
+
     public static Complement saisirComplement() {
         Complement c = new Complement();
         System.out.print("Nom du complément: ");
@@ -95,7 +99,7 @@ public class GestionnaireView {
         c.setArchive(false);
         return c;
     }
-    
+
     public static void afficheComplements(List<Complement> complements) {
         if (complements.isEmpty()) {
             System.out.println("\nAucun complément disponible");
@@ -104,7 +108,7 @@ public class GestionnaireView {
         System.out.println("\n=== LISTE DES COMPLEMENTS ===");
         complements.forEach(System.out::println);
     }
-    
+
     public static int selectionnerBurger(List<Burger> burgers) {
         afficheBurgers(burgers);
         System.out.print("\nEntrez l'ID du burger: ");
@@ -112,7 +116,7 @@ public class GestionnaireView {
         scanner.nextLine();
         return id;
     }
-    
+
     public static int selectionnerComplement(List<Complement> complements) {
         afficheComplements(complements);
         System.out.print("\nEntrez l'ID du complément: ");
@@ -120,27 +124,27 @@ public class GestionnaireView {
         scanner.nextLine();
         return id;
     }
-    
-    public static Menu saisirMenu(List<Burger> burgers, List<Complement> complements) {
+
+    public static Menu saisirMenu(List<Burger> burgers, List<Complement> boissons, List<Complement> frites) {
         Menu m = new Menu();
         System.out.print("Nom du menu: ");
         m.setNom(scanner.nextLine());
         System.out.print("URL de l'image: ");
         m.setImage(scanner.nextLine());
-        
+
         System.out.println("\nSélectionnez un burger:");
         m.setIdBurger(selectionnerBurger(burgers));
-        
+
         System.out.println("\nSélectionnez une boisson:");
-        m.setIdComplementBoisson(selectionnerComplement(complements));
-        
+        m.setIdComplementBoisson(selectionnerComplement(boissons));
+
         System.out.println("\nSélectionnez des frites:");
-        m.setIdComplementFrites(selectionnerComplement(complements));
-        
+        m.setIdComplementFrites(selectionnerComplement(frites));
+
         m.setArchive(false);
         return m;
     }
-    
+
     public static void afficheMenus(List<Menu> menus) {
         if (menus.isEmpty()) {
             System.out.println("\nAucun menu disponible");
@@ -149,7 +153,7 @@ public class GestionnaireView {
         System.out.println("\n=== LISTE DES MENUS ===");
         menus.forEach(System.out::println);
     }
-    
+
     public static int selectionnerMenu(List<Menu> menus) {
         afficheMenus(menus);
         System.out.print("\nEntrez l'ID du menu: ");
@@ -157,7 +161,7 @@ public class GestionnaireView {
         scanner.nextLine();
         return id;
     }
-    
+
     public static int saisirId() {
         System.out.print("Entrez l'ID: ");
         int id = scanner.nextInt();
@@ -168,55 +172,110 @@ public class GestionnaireView {
     public static Burger modifierBurger(Burger burger) {
         System.out.println("\n=== MODIFICATION DU BURGER ===");
         System.out.println("Burger actuel: " + burger);
-        
+
         System.out.print("Nouveau nom: ");
         String nom = scanner.nextLine();
         if (!nom.isEmpty()) {
             burger.setNom(nom);
         }
-        
+
         System.out.print("Nouvelle URL image: ");
         String image = scanner.nextLine();
         if (!image.isEmpty()) {
             burger.setImage(image);
         }
-        
+
         System.out.print("Nouveau prix: ");
         String prixStr = scanner.nextLine();
         if (!prixStr.isEmpty()) {
             burger.setPrix(Double.parseDouble(prixStr));
         }
-        
+
         return burger;
     }
-        public static Complement modifierComplement(Complement complement) {
+
+    public static Complement modifierComplement(Complement complement) {
         System.out.println("\n=== MODIFICATION DU COMPLÉMENT ===");
         System.out.println("Complément actuel: " + complement);
-        
-        System.out.print("Nouveau nom (actuel: " + complement.getNom() + "): ");
+
+        System.out.print("Nouveau nom: ");
         String nom = scanner.nextLine();
         if (!nom.isEmpty()) {
             complement.setNom(nom);
         }
-        
-        System.out.print("Nouvelle URL image (actuelle: " + complement.getImage() + "): ");
+
+        System.out.print("Nouvelle URL image: ");
         String image = scanner.nextLine();
         if (!image.isEmpty()) {
             complement.setImage(image);
         }
-        
-        System.out.print("Nouveau type (actuel: " + complement.getType() + ") [BOISSON/FRITE]: ");
+
+        System.out.print("Nouveau type: ");
         String type = scanner.nextLine().toUpperCase();
         if (!type.isEmpty()) {
             complement.setType(type);
         }
-        
-        System.out.print("Nouveau prix (actuel: " + complement.getPrix() + "): ");
+
+        System.out.print("Nouveau prix: ");
         String prixStr = scanner.nextLine();
         if (!prixStr.isEmpty()) {
             complement.setPrix(Double.parseDouble(prixStr));
         }
-        
+
         return complement;
     }
+
+    public static Menu modifierMenu(Menu menu, List<Burger> burgers, List<Complement> boissons,
+            List<Complement> frites) {
+        System.out.println("\n=== MODIFICATION DU MENU ===");
+        System.out.println("Menu actuel: " + menu);
+
+        System.out.print("Nouveau nom: ");
+        String nom = scanner.nextLine();
+        if (!nom.isEmpty()) {
+            menu.setNom(nom);
+        }
+
+        System.out.print("Nouvelle URL image: ");
+        String image = scanner.nextLine();
+        if (!image.isEmpty()) {
+            menu.setImage(image);
+        }
+
+        System.out.print("Modifier le burger ? (o/n): ");
+        String modifBurger = scanner.nextLine();
+        if (modifBurger.equalsIgnoreCase("o")) {
+            System.out.println("\nSélectionnez un nouveau burger:");
+            menu.setIdBurger(selectionnerBurger(burgers));
+        }
+
+        System.out.print("Modifier la boisson ? (o/n): ");
+        String modifBoisson = scanner.nextLine();
+        if (modifBoisson.equalsIgnoreCase("o")) {
+            System.out.println("\nSélectionnez une nouvelle boisson:");
+            menu.setIdComplementBoisson(selectionnerComplement(boissons));
+        }
+
+        System.out.print("Modifier les frites ? (o/n): ");
+        String modifFrites = scanner.nextLine();
+        if (modifFrites.equalsIgnoreCase("o")) {
+            System.out.println("\nSélectionnez de nouvelles frites:");
+            menu.setIdComplementFrites(selectionnerComplement(frites));
+        }
+
+        return menu;
+    }
+
+    public static void afficheMenusAvecDetails(List<Menu> menus, MenuService menuService) {
+        if (menus.isEmpty()) {
+            System.out.println("\nAucun menu disponible");
+            return;
+        }
+        System.out.println("\n=== LISTE DES MENUS ===");
+        for (Menu menu : menus) {
+            double prix = menuService.calculateMenuPrice(menu.getId());
+            System.out.println(menu + " | Prix total: " + prix + " FCFA");
+        }
+    }
+
 }

@@ -9,4 +9,6 @@ public interface ComplementService {
     Optional<Complement> getComplementById(int id);
     boolean updateComplement(Complement complement);
     boolean archiveComplement(int id);
+    List<Complement> getComplementsByType(String type);
+
 }

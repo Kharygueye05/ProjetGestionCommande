@@ -61,13 +61,17 @@ public class MenuServiceImpl implements MenuService {
         }
         
         Menu m = menu.get();
-        double prixBurger = burgerRepository.selectById(m.getIdBurger())
-            .map(Burger::getPrix).orElse(0.0);
-        double prixBoisson = complementRepository.selectById(m.getIdComplementBoisson())
-            .map(Complement::getPrix).orElse(0.0);
-        double prixFrites = complementRepository.selectById(m.getIdComplementFrites())
-            .map(Complement::getPrix).orElse(0.0);
+        
+        Optional<Burger> burgerOpt = burgerRepository.selectById(m.getIdBurger());
+        double prixBurger = burgerOpt.isPresent() ? burgerOpt.get().getPrix() : 0.0;
+        
+        Optional<Complement> boissonOpt = complementRepository.selectById(m.getIdComplementBoisson());
+        double prixBoisson = boissonOpt.isPresent() ? boissonOpt.get().getPrix() : 0.0;
+        
+        Optional<Complement> fritesOpt = complementRepository.selectById(m.getIdComplementFrites());
+        double prixFrites = fritesOpt.isPresent() ? fritesOpt.get().getPrix() : 0.0;
         
         return prixBurger + prixBoisson + prixFrites;
     }
+
 }
