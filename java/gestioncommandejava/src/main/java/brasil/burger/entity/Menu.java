@@ -7,9 +7,9 @@ public class Menu extends Produit {
 
     public Menu() {}
 
-    public Menu(int id, String nom, String image, boolean archive, int quantity, 
+    public Menu(int id, String nom, String image, boolean archive, 
                 int idBurger, int idComplementBoisson, int idComplementFrites) {
-        super(id, nom, image, archive, quantity);
+        super(id, nom, image, archive);
         this.idBurger = idBurger;
         this.idComplementBoisson = idComplementBoisson;
         this.idComplementFrites = idComplementFrites;
@@ -47,9 +47,7 @@ public class Menu extends Produit {
                 ", idBurger=" + idBurger +
                 ", idComplementBoisson=" + idComplementBoisson +
                 ", idComplementFrites=" + idComplementFrites +
-                ", quantity=" + getQuantity() +
                 ", archive=" + isArchive() +
                 '}';
     }
 }
-

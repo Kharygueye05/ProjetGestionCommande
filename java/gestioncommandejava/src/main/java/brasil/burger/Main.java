@@ -4,6 +4,8 @@ import brasil.burger.config.factory.services.ServicesFactory;
 import brasil.burger.services.*;
 import brasil.burger.views.GestionnaireView;
 import brasil.burger.entity.*;
+import java.util.List;
+import java.util.Optional;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,16 +25,33 @@ public class Main {
                             case 1:
                                 Burger nouveauBurger = GestionnaireView.saisirBurger();
                                 if (burgerService.createBurger(nouveauBurger)) {
-                                    System.out.println("Burger créé avec succès!");
+                                    System.out.println("\nBurger créé avec succès!");
                                 } else {
-                                    System.out.println("Erreur lors de la création du burger");
+                                    System.out.println("\nErreur lors de la création du burger");
                                 }
                                 break;
                             case 2:
+                                
                                 GestionnaireView.afficheBurgers(burgerService.getAllBurgers());
                                 break;
                             case 3:
-                                System.out.println("");
+                                List<Burger> burgersAModifier = burgerService.getAllBurgers();
+                                if (burgersAModifier.isEmpty()) {
+                                    System.out.println("\nAucun burger à modifier");
+                                } else {
+                                    int idBurgerModif = GestionnaireView.selectionnerBurger(burgersAModifier);
+                                    Optional<Burger> burgerOpt = burgerService.getBurgerById(idBurgerModif);
+                                    if (burgerOpt.isPresent()) {
+                                        Burger burgerModifie = GestionnaireView.modifierBurger(burgerOpt.get());
+                                        if (burgerService.updateBurger(burgerModifie)) {
+                                            System.out.println("\nBurger modifié avec succès!");
+                                        } else {
+                                            System.out.println("\nErreur lors de la modification");
+                                        }
+                                    } else {
+                                        System.out.println("\nBurger introuvable");
+                                    }
+                                }
                                 break;
                             case 4:
                                 System.out.println("");

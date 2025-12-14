@@ -5,8 +5,8 @@ public class Burger extends Produit {
 
     public Burger() {}
 
-    public Burger(int id, String nom, String image, boolean archive, int quantity, double prix) {
-        super(id, nom, image, archive, quantity);
+    public Burger(int id, String nom, String image, boolean archive, double prix) {
+        super(id, nom, image, archive);
         this.prix = prix;
     }
 
@@ -23,11 +23,8 @@ public class Burger extends Produit {
         return "Burger{" +
                 "id=" + getId() +
                 ", nom='" + getNom() + '\'' +
-                ", prix=" + prix +
-                ", quantity=" + getQuantity() +
+                ", prix=" + prix + " FCFA" +
                 ", archive=" + isArchive() +
                 '}';
     }
 }
-
-

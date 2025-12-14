@@ -65,8 +65,6 @@ public class GestionnaireView {
         b.setNom(scanner.nextLine());
         System.out.print("URL de l'image: ");
         b.setImage(scanner.nextLine());
-        System.out.print("Quantité: ");
-        b.setQuantity(scanner.nextInt());
         System.out.print("Prix: ");
         b.setPrix(scanner.nextDouble());
         scanner.nextLine();
@@ -76,7 +74,7 @@ public class GestionnaireView {
     
     public static void afficheBurgers(List<Burger> burgers) {
         if (burgers.isEmpty()) {
-            System.out.println("Aucun burger disponible");
+            System.out.println("\nAucun burger disponible");
             return;
         }
         System.out.println("\n=== LISTE DES BURGERS ===");
@@ -90,9 +88,7 @@ public class GestionnaireView {
         System.out.print("URL de l'image: ");
         c.setImage(scanner.nextLine());
         System.out.print("Type (BOISSON/FRITE): ");
-        c.setType(scanner.nextLine());
-        System.out.print("Quantité: ");
-        c.setQuantity(scanner.nextInt());
+        c.setType(scanner.nextLine().toUpperCase());
         System.out.print("Prix: ");
         c.setPrix(scanner.nextDouble());
         scanner.nextLine();
@@ -102,7 +98,7 @@ public class GestionnaireView {
     
     public static void afficheComplements(List<Complement> complements) {
         if (complements.isEmpty()) {
-            System.out.println("Aucun complément disponible");
+            System.out.println("\nAucun complément disponible");
             return;
         }
         System.out.println("\n=== LISTE DES COMPLEMENTS ===");
@@ -111,7 +107,7 @@ public class GestionnaireView {
     
     public static int selectionnerBurger(List<Burger> burgers) {
         afficheBurgers(burgers);
-        System.out.print("Entrez l'ID du burger: ");
+        System.out.print("\nEntrez l'ID du burger: ");
         int id = scanner.nextInt();
         scanner.nextLine();
         return id;
@@ -119,7 +115,7 @@ public class GestionnaireView {
     
     public static int selectionnerComplement(List<Complement> complements) {
         afficheComplements(complements);
-        System.out.print("Entrez l'ID du complément: ");
+        System.out.print("\nEntrez l'ID du complément: ");
         int id = scanner.nextInt();
         scanner.nextLine();
         return id;
@@ -131,9 +127,6 @@ public class GestionnaireView {
         m.setNom(scanner.nextLine());
         System.out.print("URL de l'image: ");
         m.setImage(scanner.nextLine());
-        System.out.print("Quantité: ");
-        m.setQuantity(scanner.nextInt());
-        scanner.nextLine();
         
         System.out.println("\nSélectionnez un burger:");
         m.setIdBurger(selectionnerBurger(burgers));
@@ -150,7 +143,7 @@ public class GestionnaireView {
     
     public static void afficheMenus(List<Menu> menus) {
         if (menus.isEmpty()) {
-            System.out.println("Aucun menu disponible");
+            System.out.println("\nAucun menu disponible");
             return;
         }
         System.out.println("\n=== LISTE DES MENUS ===");
@@ -159,7 +152,7 @@ public class GestionnaireView {
     
     public static int selectionnerMenu(List<Menu> menus) {
         afficheMenus(menus);
-        System.out.print("Entrez l'ID du menu: ");
+        System.out.print("\nEntrez l'ID du menu: ");
         int id = scanner.nextInt();
         scanner.nextLine();
         return id;
@@ -170,5 +163,30 @@ public class GestionnaireView {
         int id = scanner.nextInt();
         scanner.nextLine();
         return id;
+    }
+
+    public static Burger modifierBurger(Burger burger) {
+        System.out.println("\n=== MODIFICATION DU BURGER ===");
+        System.out.println("Burger actuel: " + burger);
+        
+        System.out.print("Nouveau nom: ");
+        String nom = scanner.nextLine();
+        if (!nom.isEmpty()) {
+            burger.setNom(nom);
+        }
+        
+        System.out.print("Nouvelle URL image: ");
+        String image = scanner.nextLine();
+        if (!image.isEmpty()) {
+            burger.setImage(image);
+        }
+        
+        System.out.print("Nouveau prix: ");
+        String prixStr = scanner.nextLine();
+        if (!prixStr.isEmpty()) {
+            burger.setPrix(Double.parseDouble(prixStr));
+        }
+        
+        return burger;
     }
 }

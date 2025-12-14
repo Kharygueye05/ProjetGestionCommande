@@ -25,13 +25,12 @@ public class BurgerRepositoryBd implements BurgerRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO burger (nom, image, archive, quantity, prix) VALUES (?, ?, ?, ?, ?)"
+                "INSERT INTO burger (nom, image, archive, prix) VALUES (?, ?, ?, ?)"
             );
             ps.setString(1, burger.getNom());
             ps.setString(2, burger.getImage());
             ps.setBoolean(3, burger.isArchive());
-            ps.setInt(4, burger.getQuantity());
-            ps.setDouble(5, burger.getPrix());
+            ps.setDouble(4, burger.getPrix());
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,7 +43,7 @@ public class BurgerRepositoryBd implements BurgerRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, nom, image, archive, quantity, prix FROM burger WHERE archive = false"
+                "SELECT id, nom, image, archive, prix FROM burger WHERE archive = false"
             );
             return database.fetchAll(ps, this::toEntity);
         } catch (SQLException e) {
@@ -58,7 +57,7 @@ public class BurgerRepositoryBd implements BurgerRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, nom, image, archive, quantity, prix FROM burger WHERE id = ?"
+                "SELECT id, nom, image, archive, prix FROM burger WHERE id = ?"
             );
             ps.setInt(1, id);
             return database.fetch(ps, this::toEntity);
@@ -73,13 +72,12 @@ public class BurgerRepositoryBd implements BurgerRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "UPDATE burger SET nom = ?, image = ?, quantity = ?, prix = ? WHERE id = ?"
+                "UPDATE burger SET nom = ?, image = ?, prix = ? WHERE id = ?"
             );
             ps.setString(1, burger.getNom());
             ps.setString(2, burger.getImage());
-            ps.setInt(3, burger.getQuantity());
-            ps.setDouble(4, burger.getPrix());
-            ps.setInt(5, burger.getId());
+            ps.setDouble(3, burger.getPrix());
+            ps.setInt(4, burger.getId());
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -108,7 +106,6 @@ public class BurgerRepositoryBd implements BurgerRepository {
         b.setNom(rs.getString("nom"));
         b.setImage(rs.getString("image"));
         b.setArchive(rs.getBoolean("archive"));
-        b.setQuantity(rs.getInt("quantity"));
         b.setPrix(rs.getDouble("prix"));
         return b;
     }

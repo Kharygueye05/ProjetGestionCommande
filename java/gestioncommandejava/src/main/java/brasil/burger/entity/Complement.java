@@ -6,8 +6,8 @@ public class Complement extends Produit {
 
     public Complement() {}
 
-    public Complement(int id, String nom, String image, boolean archive, int quantity, double prix, String type) {
-        super(id, nom, image, archive, quantity);
+    public Complement(int id, String nom, String image, boolean archive, double prix, String type) {
+        super(id, nom, image, archive);
         this.prix = prix;
         this.type = type;
     }
@@ -34,9 +34,9 @@ public class Complement extends Produit {
                 "id=" + getId() +
                 ", nom='" + getNom() + '\'' +
                 ", type='" + type + '\'' +
-                ", prix=" + prix +
-                ", quantity=" + getQuantity() +
+                ", prix=" + prix + " FCFA" +
                 ", archive=" + isArchive() +
                 '}';
     }
 }
+

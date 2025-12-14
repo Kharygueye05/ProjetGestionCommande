@@ -5,16 +5,14 @@ public abstract class Produit {
     private String nom;
     private String image;
     private boolean archive;
-    private int quantity;
 
     public Produit() {}
 
-    public Produit(int id, String nom, String image, boolean archive, int quantity) {
+    public Produit(int id, String nom, String image, boolean archive) {
         this.id = id;
         this.nom = nom;
         this.image = image;
         this.archive = archive;
-        this.quantity = quantity;
     }
 
     public int getId() {
@@ -49,14 +47,6 @@ public abstract class Produit {
         this.archive = archive;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     @Override
     public String toString() {
         return "Produit{" +
@@ -64,7 +54,7 @@ public abstract class Produit {
                 ", nom='" + nom + '\'' +
                 ", image='" + image + '\'' +
                 ", archive=" + archive +
-                ", quantity=" + quantity +
                 '}';
     }
 }
+

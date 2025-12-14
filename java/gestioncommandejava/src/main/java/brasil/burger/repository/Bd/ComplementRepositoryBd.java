@@ -25,14 +25,13 @@ public class ComplementRepositoryBd implements ComplementRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO complement (nom, image, archive, quantity, prix, type) VALUES (?, ?, ?, ?, ?, ?)"
+                "INSERT INTO complement (nom, image, archive, prix, type) VALUES (?, ?, ?, ?, ?)"
             );
             ps.setString(1, complement.getNom());
             ps.setString(2, complement.getImage());
             ps.setBoolean(3, complement.isArchive());
-            ps.setInt(4, complement.getQuantity());
-            ps.setDouble(5, complement.getPrix());
-            ps.setString(6, complement.getType());
+            ps.setDouble(4, complement.getPrix());
+            ps.setString(5, complement.getType());
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -45,7 +44,7 @@ public class ComplementRepositoryBd implements ComplementRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, nom, image, archive, quantity, prix, type FROM complement WHERE archive = false"
+                "SELECT id, nom, image, archive, prix, type FROM complement WHERE archive = false"
             );
             return database.fetchAll(ps, this::toEntity);
         } catch (SQLException e) {
@@ -59,7 +58,7 @@ public class ComplementRepositoryBd implements ComplementRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, nom, image, archive, quantity, prix, type FROM complement WHERE id = ?"
+                "SELECT id, nom, image, archive, prix, type FROM complement WHERE id = ?"
             );
             ps.setInt(1, id);
             return database.fetch(ps, this::toEntity);
@@ -74,14 +73,13 @@ public class ComplementRepositoryBd implements ComplementRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "UPDATE complement SET nom = ?, image = ?, quantity = ?, prix = ?, type = ? WHERE id = ?"
+                "UPDATE complement SET nom = ?, image = ?, prix = ?, type = ? WHERE id = ?"
             );
             ps.setString(1, complement.getNom());
             ps.setString(2, complement.getImage());
-            ps.setInt(3, complement.getQuantity());
-            ps.setDouble(4, complement.getPrix());
-            ps.setString(5, complement.getType());
-            ps.setInt(6, complement.getId());
+            ps.setDouble(3, complement.getPrix());
+            ps.setString(4, complement.getType());
+            ps.setInt(5, complement.getId());
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -110,7 +108,6 @@ public class ComplementRepositoryBd implements ComplementRepository {
         c.setNom(rs.getString("nom"));
         c.setImage(rs.getString("image"));
         c.setArchive(rs.getBoolean("archive"));
-        c.setQuantity(rs.getInt("quantity"));
         c.setPrix(rs.getDouble("prix"));
         c.setType(rs.getString("type"));
         return c;

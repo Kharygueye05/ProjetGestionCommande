@@ -25,15 +25,14 @@ public class MenuRepositoryBd implements MenuRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "INSERT INTO menu (nom, image, archive, quantity, id_burger, id_complement_boisson, id_complement_frites) VALUES (?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO menu (nom, image, archive, id_burger, id_complement_boisson, id_complement_frites) VALUES (?, ?, ?, ?, ?, ?)"
             );
             ps.setString(1, menu.getNom());
             ps.setString(2, menu.getImage());
             ps.setBoolean(3, menu.isArchive());
-            ps.setInt(4, menu.getQuantity());
-            ps.setInt(5, menu.getIdBurger());
-            ps.setInt(6, menu.getIdComplementBoisson());
-            ps.setInt(7, menu.getIdComplementFrites());
+            ps.setInt(4, menu.getIdBurger());
+            ps.setInt(5, menu.getIdComplementBoisson());
+            ps.setInt(6, menu.getIdComplementFrites());
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -46,7 +45,7 @@ public class MenuRepositoryBd implements MenuRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, nom, image, archive, quantity, id_burger, id_complement_boisson, id_complement_frites FROM menu WHERE archive = false"
+                "SELECT id, nom, image, archive, id_burger, id_complement_boisson, id_complement_frites FROM menu WHERE archive = false"
             );
             return database.fetchAll(ps, this::toEntity);
         } catch (SQLException e) {
@@ -60,7 +59,7 @@ public class MenuRepositoryBd implements MenuRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "SELECT id, nom, image, archive, quantity, id_burger, id_complement_boisson, id_complement_frites FROM menu WHERE id = ?"
+                "SELECT id, nom, image, archive, id_burger, id_complement_boisson, id_complement_frites FROM menu WHERE id = ?"
             );
             ps.setInt(1, id);
             return database.fetch(ps, this::toEntity);
@@ -75,15 +74,14 @@ public class MenuRepositoryBd implements MenuRepository {
         Connection conn = database.getConnection();
         try {
             PreparedStatement ps = conn.prepareStatement(
-                "UPDATE menu SET nom = ?, image = ?, quantity = ?, id_burger = ?, id_complement_boisson = ?, id_complement_frites = ? WHERE id = ?"
+                "UPDATE menu SET nom = ?, image = ?, id_burger = ?, id_complement_boisson = ?, id_complement_frites = ? WHERE id = ?"
             );
             ps.setString(1, menu.getNom());
             ps.setString(2, menu.getImage());
-            ps.setInt(3, menu.getQuantity());
-            ps.setInt(4, menu.getIdBurger());
-            ps.setInt(5, menu.getIdComplementBoisson());
-            ps.setInt(6, menu.getIdComplementFrites());
-            ps.setInt(7, menu.getId());
+            ps.setInt(3, menu.getIdBurger());
+            ps.setInt(4, menu.getIdComplementBoisson());
+            ps.setInt(5, menu.getIdComplementFrites());
+            ps.setInt(6, menu.getId());
             return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -112,7 +110,6 @@ public class MenuRepositoryBd implements MenuRepository {
         m.setNom(rs.getString("nom"));
         m.setImage(rs.getString("image"));
         m.setArchive(rs.getBoolean("archive"));
-        m.setQuantity(rs.getInt("quantity"));
         m.setIdBurger(rs.getInt("id_burger"));
         m.setIdComplementBoisson(rs.getInt("id_complement_boisson"));
         m.setIdComplementFrites(rs.getInt("id_complement_frites"));
