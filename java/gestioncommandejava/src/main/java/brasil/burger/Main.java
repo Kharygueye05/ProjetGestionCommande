@@ -29,7 +29,7 @@ public class Main {
                                 }
                                 break;
                             case 2:
-                                System.out.println("");
+                                GestionnaireView.afficheBurgers(burgerService.getAllBurgers());
                                 break;
                             case 3:
                                 System.out.println("");
@@ -47,18 +47,16 @@ public class Main {
                     } while (choixBurger != 5);
                     break;
                 case 2:
-                    
                     System.out.println("");
                     break;
                 case 3:
-                    
                     System.out.println("");
                     break;
                 case 4:
-                    System.out.println("");
+                    System.out.println("Au revoir!");
                     break;
                 default:
-                    System.out.println("");
+                    System.out.println("Choix incorrect");
                     break;
             }
         } while (choix != 4);
