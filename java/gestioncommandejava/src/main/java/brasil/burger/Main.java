@@ -54,7 +54,17 @@ public class Main {
                                 }
                                 break;
                             case 4:
-                                System.out.println("");
+                                List<Burger> burgersAArchiver = burgerService.getAllBurgers();
+                                if (burgersAArchiver.isEmpty()) {
+                                    System.out.println("\nAucun burger à archiver");
+                                } else {
+                                    int idBurgerArch = GestionnaireView.selectionnerBurger(burgersAArchiver);
+                                    if (burgerService.archiveBurger(idBurgerArch)) {
+                                        System.out.println("\nBurger archivé avec succès!");
+                                    } else {
+                                        System.out.println("\n Erreur lors de l'archivage");
+                                    }
+                                }
                                 break;
                             case 5:
                                 System.out.println("Retour au menu principal");
