@@ -189,4 +189,34 @@ public class GestionnaireView {
         
         return burger;
     }
+        public static Complement modifierComplement(Complement complement) {
+        System.out.println("\n=== MODIFICATION DU COMPLÉMENT ===");
+        System.out.println("Complément actuel: " + complement);
+        
+        System.out.print("Nouveau nom (actuel: " + complement.getNom() + "): ");
+        String nom = scanner.nextLine();
+        if (!nom.isEmpty()) {
+            complement.setNom(nom);
+        }
+        
+        System.out.print("Nouvelle URL image (actuelle: " + complement.getImage() + "): ");
+        String image = scanner.nextLine();
+        if (!image.isEmpty()) {
+            complement.setImage(image);
+        }
+        
+        System.out.print("Nouveau type (actuel: " + complement.getType() + ") [BOISSON/FRITE]: ");
+        String type = scanner.nextLine().toUpperCase();
+        if (!type.isEmpty()) {
+            complement.setType(type);
+        }
+        
+        System.out.print("Nouveau prix (actuel: " + complement.getPrix() + "): ");
+        String prixStr = scanner.nextLine();
+        if (!prixStr.isEmpty()) {
+            complement.setPrix(Double.parseDouble(prixStr));
+        }
+        
+        return complement;
+    }
 }
