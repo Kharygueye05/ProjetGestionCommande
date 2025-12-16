@@ -1,12 +1,20 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+# Stage 1: build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /app
+
+# Copier tout le projet
 COPY . .
+
+# Restaurer les dépendances et publier
 RUN dotnet restore
 RUN dotnet publish -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+# Stage 2: runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
+
+# Copier les fichiers publiés depuis le build
 COPY --from=build /app/out .
-ENV ASPNETCORE_URLS=http://+:10000
-EXPOSE 10000
+
+# Lancer l'application
 ENTRYPOINT ["dotnet", "gescommandeCsharp.dll"]
