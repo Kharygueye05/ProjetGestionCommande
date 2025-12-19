@@ -18,6 +18,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\hp\Desktop\Baila wane\ProjetsExamensL3\ProjetGestionCommande\gescommandeCsharp\gescommandeCsharp
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/DetailsBurger.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ3VlXERldGFpbHNCdXJnZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/DetailsMenu.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ3VlXERldGFpbHNNZW51LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ3VlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 

@@ -1,0 +1,42 @@
+@model BrasilBurger.Models.Burger
+
+@{
+    ViewData["Title"] = "Détails du Burger";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.Image))
+            {
+                <img src="@Model.Image" class="img-fluid rounded shadow" alt="@Model.Nom">
+            }
+            else
+            {
+                <div class="bg-secondary rounded shadow d-flex align-items-center justify-content-center" style="height: 400px;">
+                    <span class="text-white fs-4">Pas d'image</span>
+                </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <h1 class="mb-3">@Model.Nom</h1>
+            
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <p class="lead mb-4">@Model.Description</p>
+            }
+
+            <div class="mb-4">
+                <h3 class="text-primary">@Model.Prix.ToString("C")</h3>
+            </div>
+
+            <div class="d-grid gap-2 d-md-block">
+                <a href="@Url.Action("Index")" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour au catalogue
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+

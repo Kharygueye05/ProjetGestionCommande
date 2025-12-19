@@ -1,4 +1,4 @@
-namespace gescommandeCsharp.Models;
+namespace BrasilBurger.Models;
 
 public class ErrorViewModel
 {

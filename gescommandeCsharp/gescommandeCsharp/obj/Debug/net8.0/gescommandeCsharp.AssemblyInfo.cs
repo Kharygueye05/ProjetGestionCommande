@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("gescommandeCsharp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+76328069c0de33969ff454293858f16b35397065")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+432ce522a3e8a10fc6c40c8df604e6566d8b5e64")]
 [assembly: System.Reflection.AssemblyProductAttribute("gescommandeCsharp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("gescommandeCsharp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

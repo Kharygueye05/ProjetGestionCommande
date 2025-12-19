@@ -1,0 +1,236 @@
+@{
+    ViewData["Title"] = "Catalogue";
+    var burgers = ViewBag.Burgers as IEnumerable<BrasilBurger.Models.Burger> ?? new List<BrasilBurger.Models.Burger>();
+    var menus = ViewBag.Menus as IEnumerable<BrasilBurger.Models.Menu> ?? new List<BrasilBurger.Models.Menu>();
+    var complements = ViewBag.Complements as IEnumerable<BrasilBurger.Models.Complement> ?? new List<BrasilBurger.Models.Complement>();
+    var filtreActuel = ViewBag.FiltreActuel as string ?? "tous";
+}
+
+<style>
+    .hero-section {
+        padding: 3rem 0 2rem;
+    }
+    
+    .hero-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 900;
+        font-size: 3rem;
+        color: #111827;
+        line-height: 1.2;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+        color: #111827;
+        margin-bottom: 1rem;
+    }
+    
+    .product-card {
+        background-color: #f1e5d4;
+        border-radius: 40px;
+        padding: 2rem;
+        box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.25);
+        margin-bottom: 2rem;
+        position: relative;
+        min-height: 191px;
+    }
+    
+    .product-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #000000;
+        margin-bottom: 0.5rem;
+    }
+    
+    .product-description {
+        font-size: 0.875rem;
+        color: #000000;
+        margin-bottom: 1rem;
+        max-width: 60%;
+    }
+    
+    .price-badge {
+        background-color: #e6c200;
+        border-radius: 30px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #000000;
+        display: inline-block;
+    }
+    
+    .add-btn {
+        background-color: #e6c200;
+        border-radius: 30px;
+        border: none;
+        width: 2.5rem;
+        height: 2.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin-left: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+        position: absolute;
+        bottom: 2rem;
+        right: 2rem;
+    }
+    
+    .add-btn:hover {
+        transform: scale(1.1);
+    }
+    
+    .product-card {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .product-image {
+        position: absolute;
+        right: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 35%;
+        height: 85%;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+    
+    .filter-btn {
+        border-radius: 30px;
+        padding: 0.5rem 1.5rem;
+        font-size: 1.25rem;
+        font-weight: 500;
+        border: none;
+        margin-right: 1.5rem;
+        text-decoration: none;
+        display: inline-block;
+    }
+    
+    .filter-btn-active {
+        background-color: #ffd700;
+        color: #000000;
+    }
+    
+    .filter-btn-inactive {
+        background-color: #e5e7eb;
+        color: #000000;
+    }
+    
+    .filter-btn-inactive:hover {
+        background-color: #d1d5db;
+    }
+    
+    .no-products {
+        text-align: center;
+        padding: 3rem 0;
+        font-size: 1.25rem;
+        color: #6b7280;
+    }
+</style>
+
+<section class="hero-section">
+    <div class="container">
+        <p class="section-subtitle">Notre Sélection</p>
+        <h1 class="hero-title">
+            Découvrez Nos<br>
+            Créations Gourmandes
+        </h1>
+    </div>
+</section>
+
+<section class="mb-4">
+    <div class="container">
+        <a href="@Url.Action("Index", "Catalogue")" 
+           class="filter-btn @(filtreActuel == "tous" ? "filter-btn-active" : "filter-btn-inactive")">
+            Tous
+        </a>
+        <a href="@Url.Action("Index", "Catalogue", new { filtre = "burgers" })" 
+           class="filter-btn @(filtreActuel == "burgers" ? "filter-btn-active" : "filter-btn-inactive")">
+            Burgers
+        </a>
+        <a href="@Url.Action("Index", "Catalogue", new { filtre = "menus" })" 
+           class="filter-btn @(filtreActuel == "menus" ? "filter-btn-active" : "filter-btn-inactive")">
+            Menu
+        </a>
+    </div>
+</section>
+
+<div class="container">
+    <div class="row">
+        @foreach (var burger in burgers)
+        {
+            <div class="col-6">
+                <div class="product-card" onclick="window.location.href='@Url.Action("DetailsBurger", "Catalogue", new { id = burger.Id })'">
+                    <h3 class="product-title">@burger.Nom</h3>
+                    <p class="product-description">
+                        @(string.IsNullOrEmpty(burger.Description) ? "Délicieux burger fait maison" : burger.Description)
+                    </p>
+                    <div class="d-flex align-items-center">
+                        <span class="price-badge">@burger.Prix.ToString("N0") FCFA</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(burger.Image))
+                    {
+                        <img src="@burger.Image" alt="@burger.Nom" class="product-image" onerror="this.style.display='none'">
+                    }
+                    <button class="add-btn" onclick="event.stopPropagation(); window.location.href='@Url.Action("DetailsBurger", "Catalogue", new { id = burger.Id })'">
+                        <span class="iconify" data-icon="ic:baseline-plus" style="color: black; font-size: 24px;"></span>
+                    </button>
+                </div>
+            </div>
+        }
+
+        @foreach (var menu in menus)
+        {
+            <div class="col-6">
+                <div class="product-card" onclick="window.location.href='@Url.Action("DetailsMenu", "Catalogue", new { id = menu.Id })'">
+                    <h3 class="product-title">@menu.Nom</h3>
+                    <p class="product-description">
+                        @if (string.IsNullOrEmpty(menu.Description))
+                        {
+                            @if (menu.Burger != null)
+                            {
+                                <text>@menu.Burger.Nom + Boisson + Frites</text>
+                            }
+                            else
+                            {
+                                <text>Menu complet</text>
+                            }
+                        }
+                        else
+                        {
+                            @menu.Description
+                        }
+                    </p>
+                    <div class="d-flex align-items-center">
+                        <span class="price-badge">@menu.Prix.ToString("N0") FCFA</span>
+                    </div>
+                    @if (!string.IsNullOrEmpty(menu.Image))
+                    {
+                        <img src="@menu.Image" alt="@menu.Nom" class="product-image" onerror="this.style.display='none'">
+                    }
+                    <button class="add-btn" onclick="event.stopPropagation(); window.location.href='@Url.Action("DetailsMenu", "Catalogue", new { id = menu.Id })'">
+                        <span class="iconify" data-icon="ic:baseline-plus" style="color: black; font-size: 24px;"></span>
+                    </button>
+                </div>
+            </div>
+        }
+
+
+        @if (!burgers.Any() && !menus.Any())
+        {
+            <div class="col-12">
+                <div class="no-products">
+                    <span class="iconify mb-3" data-icon="mdi:food-off" style="font-size: 4rem; color: #d1d5db;"></span>
+                    <p>Aucun produit disponible pour le moment.</p>
+                </div>
+            </div>
+        }
+    </div>
+</div>

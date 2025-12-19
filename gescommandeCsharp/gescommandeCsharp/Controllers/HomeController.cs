@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using gescommandeCsharp.Models;
+using BrasilBurger.Models;
 
-namespace gescommandeCsharp.Controllers;
+namespace BrasilBurger.Controllers;
 
 public class HomeController : Controller
 {
