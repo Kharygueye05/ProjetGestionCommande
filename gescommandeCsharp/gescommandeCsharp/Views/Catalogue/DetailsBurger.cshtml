@@ -1,42 +1,366 @@
 @model BrasilBurger.Models.Burger
-
 @{
-    ViewData["Title"] = "Détails du Burger";
+    ViewData["Title"] = Model.Nom;
+    var complements = ViewBag.Complements as IEnumerable<BrasilBurger.Models.Complement> ?? new List<BrasilBurger.Models.Complement>();
 }
 
-<div class="container mt-4">
+<style>
+    .details-container {
+        padding: 3rem 0;
+    }
+    
+    .back-btn {
+        background-color: #e5e7eb;
+        border: none;
+        border-radius: 30px;
+        padding: 0.5rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #000000;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .back-btn:hover {
+        background-color: #d1d5db;
+        color: #000000;
+    }
+    
+    .product-image-large {
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+        border-radius: 40px;
+        box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.25);
+    }
+    
+    .product-name {
+        font-family: 'Geist', sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: #111827;
+        margin-bottom: 1rem;
+    }
+    
+    .product-desc {
+        font-size: 1.125rem;
+        color: #6b7280;
+        margin-bottom: 2rem;
+        line-height: 1.6;
+    }
+    
+    .price-large {
+        background-color: #e6c200;
+        border-radius: 30px;
+        padding: 0.75rem 2rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #000000;
+        display: inline-block;
+        margin-bottom: 2rem;
+    }
+    
+    .section-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #111827;
+        margin-bottom: 1.5rem;
+    }
+    
+    .complement-card {
+        background-color: #f9fafb;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .complement-card:hover {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .complement-card.selected {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .complement-checkbox {
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+    }
+    
+    .complement-info {
+        flex: 1;
+        margin: 0 1rem;
+    }
+    
+    .complement-name {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #111827;
+    }
+    
+    .complement-price {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #e6c200;
+    }
+    
+    .type-card {
+        background-color: #f9fafb;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-bottom: 1rem;
+    }
+    
+    .type-card:hover {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .type-card.selected {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .type-icon {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #111827;
+    }
+    
+    .type-label {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #111827;
+    }
+    
+    .quantity-control {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin: 2rem 0;
+    }
+    
+    .qty-btn {
+        background-color: #e5e7eb;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    
+    .qty-btn:hover {
+        background-color: #d1d5db;
+    }
+    
+    .qty-value {
+        font-size: 1.5rem;
+        font-weight: 600;
+        min-width: 40px;
+        text-align: center;
+    }
+    
+    .add-to-cart-btn {
+        background-color: #e6c200;
+        border: none;
+        border-radius: 30px;
+        padding: 1rem 3rem;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #000000;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .add-to-cart-btn:hover {
+        transform: scale(1.05);
+    }
+    
+    .total-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin-left: 2rem;
+    }
+</style>
+
+<div class="container details-container">
+    <a href="@Url.Action("Index", "Catalogue")" class="back-btn">
+        <span class="iconify me-2" data-icon="ic:baseline-arrow-back" style="font-size: 20px;"></span>
+        Retour au catalogue
+    </a>
+    
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-5">
             @if (!string.IsNullOrEmpty(Model.Image))
             {
-                <img src="@Model.Image" class="img-fluid rounded shadow" alt="@Model.Nom">
+                <img src="@Model.Image" alt="@Model.Nom" class="product-image-large" onerror="this.src='/images/placeholder.png'">
             }
             else
             {
-                <div class="bg-secondary rounded shadow d-flex align-items-center justify-content-center" style="height: 400px;">
-                    <span class="text-white fs-4">Pas d'image</span>
+                <div class="product-image-large d-flex align-items-center justify-content-center" style="background-color: #f1e5d4;">
+                    <span class="iconify" data-icon="mdi:food" style="font-size: 6rem; color: #d1d5db;"></span>
                 </div>
             }
         </div>
-        <div class="col-md-6">
-            <h1 class="mb-3">@Model.Nom</h1>
+        
+        <div class="col-7">
+            <h1 class="product-name">@Model.Nom</h1>
             
-            @if (!string.IsNullOrEmpty(Model.Description))
-            {
-                <p class="lead mb-4">@Model.Description</p>
-            }
-
-            <div class="mb-4">
-                <h3 class="text-primary">@Model.Prix.ToString("C")</h3>
+            <p class="product-desc">
+                @(string.IsNullOrEmpty(Model.Description) ? "Délicieux burger fait maison avec des ingrédients frais et de qualité." : Model.Description)
+            </p>
+            
+            <div class="price-large" id="burgerPrice" data-price="@Model.Prix">@Model.Prix.ToString("N0") FCFA</div>
+            
+            <h3 class="section-title">Ajouter des compléments</h3>
+            <div id="complementsSection">
+                @foreach (var complement in complements)
+                {
+                    <div class="complement-card" onclick="toggleComplement(this, @complement.Id, @complement.Prix)">
+                        <input type="checkbox" class="complement-checkbox" id="comp_@complement.Id" onchange="event.stopPropagation(); updateTotal()">
+                        <div class="complement-info">
+                            <div class="complement-name">@complement.Nom</div>
+                            <div class="text-muted">@complement.Type</div>
+                        </div>
+                        <div class="complement-price">+@complement.Prix.ToString("N0") FCFA</div>
+                    </div>
+                }
             </div>
-
-            <div class="d-grid gap-2 d-md-block">
-                <a href="@Url.Action("Index")" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Retour au catalogue
-                </a>
+            
+            <h3 class="section-title mt-4">Type de commande</h3>
+            <div class="row">
+                <div class="col-4">
+                    <div class="type-card" onclick="selectType(this, 'sur_place')">
+                        <div class="type-icon">
+                            <span class="iconify" data-icon="mdi:silverware-fork-knife"></span>
+                        </div>
+                        <div class="type-label">Sur place</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="type-card" onclick="selectType(this, 'a_emporter')">
+                        <div class="type-icon">
+                            <span class="iconify" data-icon="mdi:bag-checked"></span>
+                        </div>
+                        <div class="type-label">À emporter</div>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="type-card" onclick="selectType(this, 'livraison')">
+                        <div class="type-icon">
+                            <span class="iconify" data-icon="mdi:moped"></span>
+                        </div>
+                        <div class="type-label">Livraison</div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" id="selectedType" value="">
+            
+            <div class="quantity-control">
+                <button class="qty-btn" onclick="decreaseQty()">-</button>
+                <span class="qty-value" id="quantity">1</span>
+                <button class="qty-btn" onclick="increaseQty()">+</button>
+            </div>
+            
+            <div class="d-flex align-items-center mt-4">
+                <button class="add-to-cart-btn" onclick="addToCart()">
+                    Ajouter au panier
+                </button>
+                <span class="total-price" id="totalPrice">@Model.Prix.ToString("N0") FCFA</span>
             </div>
         </div>
     </div>
 </div>
 
-
+<script>
+    let burgerPrice = @Model.Prix;
+    let quantity = 1;
+    let selectedComplements = [];
+    let selectedType = '';
+    
+    function toggleComplement(card, id, price) {
+        const checkbox = card.querySelector('input[type="checkbox"]');
+        checkbox.checked = !checkbox.checked;
+        card.classList.toggle('selected');
+        
+        if (checkbox.checked) {
+            selectedComplements.push({ id: id, price: price });
+        } else {
+            selectedComplements = selectedComplements.filter(c => c.id !== id);
+        }
+        
+        updateTotal();
+    }
+    
+    function selectType(card, type) {
+        document.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedType = type;
+        document.getElementById('selectedType').value = type;
+    }
+    
+    function increaseQty() {
+        quantity++;
+        document.getElementById('quantity').textContent = quantity;
+        updateTotal();
+    }
+    
+    function decreaseQty() {
+        if (quantity > 1) {
+            quantity--;
+            document.getElementById('quantity').textContent = quantity;
+            updateTotal();
+        }
+    }
+    
+    function updateTotal() {
+        let complementsTotal = selectedComplements.reduce((sum, c) => sum + c.price, 0);
+        let itemTotal = burgerPrice + complementsTotal;
+        let total = itemTotal * quantity;
+        
+        document.getElementById('totalPrice').textContent = total.toLocaleString('fr-FR') + ' FCFA';
+    }
+    
+    function addToCart() {
+        if (!selectedType) {
+            alert('Veuillez sélectionner un type de commande (Sur place, À emporter ou Livraison)');
+            return;
+        }
+        
+        const cartItem = {
+            burgerId: @Model.Id,
+            burgerName: '@Model.Nom',
+            burgerPrice: burgerPrice,
+            complements: selectedComplements,
+            type: selectedType,
+            quantity: quantity,
+            total: (burgerPrice + selectedComplements.reduce((sum, c) => sum + c.price, 0)) * quantity
+        };
+        
+        console.log('Ajout au panier:', cartItem);
+        
+        alert('Produit ajouté au panier !\n\nTotal: ' + cartItem.total.toLocaleString('fr-FR') + ' FCFA');
+    }
+</script>

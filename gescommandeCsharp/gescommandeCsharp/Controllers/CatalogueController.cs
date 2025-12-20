@@ -1,6 +1,5 @@
-using Microsoft.AspNetCore.Mvc;
 using BrasilBurger.Services;
-using BrasilBurger.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BrasilBurger.Controllers
 {
@@ -26,23 +25,23 @@ namespace BrasilBurger.Controllers
                 {
                     case "burgers":
                         ViewBag.Burgers = _catalogueService.GetAllBurgers();
-                        ViewBag.Menus = new List<Menu>();
-                        ViewBag.Complements = new List<Complement>();
+                        ViewBag.Menus = new List<BrasilBurger.Models.Menu>();
+                        ViewBag.Complements = new List<BrasilBurger.Models.Complement>();
                         break;
 
                     case "menus":
-                        ViewBag.Burgers = new List<Burger>();
+                        ViewBag.Burgers = new List<BrasilBurger.Models.Burger>();
                         ViewBag.Menus = _catalogueService.GetAllMenus();
-                        ViewBag.Complements = new List<Complement>();
+                        ViewBag.Complements = new List<BrasilBurger.Models.Complement>();
                         break;
 
                     case "complements":
-                        ViewBag.Burgers = new List<Burger>();
-                        ViewBag.Menus = new List<Menu>();
+                        ViewBag.Burgers = new List<BrasilBurger.Models.Burger>();
+                        ViewBag.Menus = new List<BrasilBurger.Models.Menu>();
                         ViewBag.Complements = _catalogueService.GetAllComplements();
                         break;
 
-                    default:
+                    default: 
                         ViewBag.Burgers = _catalogueService.GetAllBurgers();
                         ViewBag.Menus = _catalogueService.GetAllMenus();
                         ViewBag.Complements = _catalogueService.GetAllComplements();
@@ -68,6 +67,8 @@ namespace BrasilBurger.Controllers
                 {
                     return NotFound();
                 }
+
+                ViewBag.Complements = _catalogueService.GetAllComplements();
 
                 return View(burger);
             }
