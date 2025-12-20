@@ -1,7 +1,6 @@
-@model BrasilBurger.Models.Burger
+@model BrasilBurger.Models.Menu
 @{
     ViewData["Title"] = Model.Nom;
-    var complements = ViewBag.Complements as IEnumerable<BrasilBurger.Models.Complement> ?? new List<BrasilBurger.Models.Complement>();
 }
 
 <style>
@@ -70,47 +69,39 @@
         margin-bottom: 1.5rem;
     }
     
-    .complement-card {
+    .menu-content-card {
         background-color: #f9fafb;
         border: 2px solid #e5e7eb;
         border-radius: 20px;
-        padding: 1rem 1.5rem;
-        margin-bottom: 1rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .menu-item {
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        cursor: pointer;
-        transition: all 0.2s;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #e5e7eb;
     }
     
-    .complement-card:hover {
-        border-color: #ffd700;
-        background-color: #fffbeb;
+    .menu-item:last-child {
+        border-bottom: none;
     }
     
-    .complement-card.selected {
-        border-color: #ffd700;
-        background-color: #fffbeb;
-    }
-    
-    .complement-checkbox {
-        width: 24px;
-        height: 24px;
-        cursor: pointer;
-    }
-    
-    .complement-info {
-        flex: 1;
-        margin: 0 1rem;
-    }
-    
-    .complement-name {
+    .menu-item-label {
         font-weight: 600;
         font-size: 1.125rem;
         color: #111827;
     }
     
-    .complement-price {
+    .menu-item-name {
+        font-size: 1rem;
+        color: #6b7280;
+        margin-top: 0.25rem;
+    }
+    
+    .menu-item-price {
         font-weight: 600;
         font-size: 1rem;
         color: #e6c200;
@@ -230,22 +221,41 @@
             <h1 class="product-name">@Model.Nom</h1>
             
             <p class="product-desc">
-                @(string.IsNullOrEmpty(Model.Description) ? "Délicieux burger fait maison avec des ingrédients frais et de qualité." : Model.Description)
+                @(string.IsNullOrEmpty(Model.Description) ? "Menu complet avec burger, boisson et frites." : Model.Description)
             </p>
             
-            <div class="price-large" id="burgerPrice" data-price="@Model.Prix">@Model.Prix.ToString("N0") FCFA</div>
+            <div class="price-large" id="menuPrice" data-price="@Model.Prix">@Model.Prix.ToString("N0") FCFA</div>
             
-            <h3 class="section-title">Ajouter des compléments</h3>
-            <div id="complementsSection">
-                @foreach (var complement in complements)
+            <h3 class="section-title">Contenu du menu</h3>
+            <div class="menu-content-card">
+                @if (Model.Burger != null)
                 {
-                    <div class="complement-card" data-complement-id="@complement.Id" data-complement-price="@complement.Prix" onclick="toggleComplement(this, @complement.Id, @complement.Prix)">
-                        <input type="checkbox" class="complement-checkbox" id="comp_@complement.Id" data-complement-id="@complement.Id" data-complement-price="@complement.Prix" onchange="handleComplementChange(this, @complement.Id, @complement.Prix)">
-                        <div class="complement-info">
-                            <div class="complement-name">@complement.Nom</div>
-                            <div class="text-muted">@complement.Type</div>
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-label">Burger</div>
+                            <div class="menu-item-name">@Model.Burger.Nom</div>
                         </div>
-                        <div class="complement-price">+@complement.Prix.ToString("N0") FCFA</div>
+                        <div class="menu-item-price">@Model.Burger.Prix.ToString("N0") FCFA</div>
+                    </div>
+                }
+                @if (Model.ComplementBoisson != null)
+                {
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-label">Boisson</div>
+                            <div class="menu-item-name">@Model.ComplementBoisson.Nom</div>
+                        </div>
+                        <div class="menu-item-price">@Model.ComplementBoisson.Prix.ToString("N0") FCFA</div>
+                    </div>
+                }
+                @if (Model.ComplementFrites != null)
+                {
+                    <div class="menu-item">
+                        <div>
+                            <div class="menu-item-label">Frites</div>
+                            <div class="menu-item-name">@Model.ComplementFrites.Nom</div>
+                        </div>
+                        <div class="menu-item-price">@Model.ComplementFrites.Prix.ToString("N0") FCFA</div>
                     </div>
                 }
             </div>
@@ -296,45 +306,9 @@
 </div>
 
 <script>
-    let burgerPrice = parseFloat(@Model.Prix);
+    let menuPrice = parseFloat(@Model.Prix);
     let quantity = 1;
-    let selectedComplements = [];
     let selectedType = '';
-    
-    function toggleComplement(card, id, price) {
-        const checkbox = card.querySelector('input[type="checkbox"]');
-        const isChecked = !checkbox.checked;
-        checkbox.checked = isChecked;
-        
-        if (isChecked) {
-            card.classList.add('selected');
-            if (!selectedComplements.find(c => c.id === id)) {
-                selectedComplements.push({ id: id, price: parseFloat(price) });
-            }
-        } else {
-            card.classList.remove('selected');
-            selectedComplements = selectedComplements.filter(c => c.id !== id);
-        }
-        
-        updateTotal();
-    }
-    
-    function handleComplementChange(checkbox, id, price) {
-        const card = checkbox.closest('.complement-card');
-        const isChecked = checkbox.checked;
-        
-        if (isChecked) {
-            card.classList.add('selected');
-            if (!selectedComplements.find(c => c.id === id)) {
-                selectedComplements.push({ id: id, price: parseFloat(price) });
-            }
-        } else {
-            card.classList.remove('selected');
-            selectedComplements = selectedComplements.filter(c => c.id !== id);
-        }
-        
-        updateTotal();
-    }
     
     function selectType(card, type) {
         document.querySelectorAll('.type-card').forEach(c => {
@@ -361,10 +335,7 @@
     }
     
     function updateTotal() {
-        let complementsTotal = selectedComplements.reduce((sum, c) => sum + parseFloat(c.price), 0);
-        let itemTotal = burgerPrice + complementsTotal;
-        let total = itemTotal * quantity;
-        
+        let total = menuPrice * quantity;
         document.getElementById('totalPrice').textContent = total.toLocaleString('fr-FR') + ' FCFA';
     }
     
@@ -374,15 +345,15 @@
             return;
         }
         
-        let complementsTotal = selectedComplements.reduce((sum, c) => sum + parseFloat(c.price), 0);
-        let itemTotal = burgerPrice + complementsTotal;
-        let total = itemTotal * quantity;
+        let total = menuPrice * quantity;
         
         const cartItem = {
-            burgerId: @Model.Id,
-            burgerName: '@Model.Nom',
-            burgerPrice: burgerPrice,
-            complements: selectedComplements,
+            menuId: @Model.Id,
+            menuName: '@Model.Nom',
+            menuPrice: menuPrice,
+            burgerId: @(Model.Burger?.Id ?? 0),
+            boissonId: @(Model.ComplementBoisson?.Id ?? 0),
+            fritesId: @(Model.ComplementFrites?.Id ?? 0),
             type: selectedType,
             quantity: quantity,
             total: total
@@ -390,10 +361,11 @@
         
         console.log('Ajout au panier:', cartItem);
         
-        alert('Produit ajouté au panier !\n\nTotal: ' + total.toLocaleString('fr-FR') + ' FCFA');
+        alert('Menu ajouté au panier !\n\nTotal: ' + total.toLocaleString('fr-FR') + ' FCFA');
     }
     
     document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
     });
 </script>
+
