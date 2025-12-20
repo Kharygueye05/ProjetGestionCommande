@@ -1,0 +1,362 @@
+@{
+    ViewData["Title"] = "Paiement";
+    var zones = ViewBag.Zones as IEnumerable<BrasilBurger.Models.Zone> ?? new List<BrasilBurger.Models.Zone>();
+    var clientTelephone = Context.Session.GetString("ClientTelephone");
+}
+
+<style>
+    .checkout-container {
+        padding: 3rem 0;
+    }
+    
+    .page-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: #111827;
+        margin-bottom: 2rem;
+    }
+    
+    .section-card {
+        background-color: #f9fafb;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+    
+    .section-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #111827;
+        margin-bottom: 1.5rem;
+    }
+    
+    .payment-option {
+        background-color: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    .payment-option:hover {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .payment-option.selected {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+        box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
+    }
+    
+    .payment-icon {
+        width: 50px;
+        height: 50px;
+        background-color: #f1e5d4;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .payment-label {
+        font-weight: 600;
+        font-size: 1.125rem;
+        color: #111827;
+    }
+    
+    .form-input-custom {
+        border: 2px solid #e5e7eb;
+        border-radius: 15px;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        width: 100%;
+        transition: border-color 0.2s;
+    }
+    
+    .form-input-custom:focus {
+        border-color: #ffd700;
+        outline: none;
+    }
+    
+    .zone-option {
+        background-color: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 15px;
+        padding: 1rem 1.5rem;
+        margin-bottom: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .zone-option:hover {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .zone-option.selected {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .zone-name {
+        font-weight: 600;
+        color: #111827;
+    }
+    
+    .zone-price {
+        color: #e6c200;
+        font-weight: 600;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        font-size: 1.125rem;
+    }
+    
+    .summary-row.total {
+        border-top: 2px solid #e5e7eb;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+    }
+    
+    .confirm-btn {
+        background-color: #e6c200;
+        border: none;
+        border-radius: 30px;
+        padding: 1rem 0;
+        width: 100%;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #000000;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        transition: transform 0.2s;
+    }
+    
+    .confirm-btn:hover {
+        transform: scale(1.02);
+    }
+    
+    .info-text {
+        color: #6b7280;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+</style>
+
+<div class="container checkout-container">
+    <h1 class="page-title">Finaliser votre commande</h1>
+    
+    <div class="row">
+        <div class="col-8">
+            <div class="section-card">
+                <h3 class="section-title">Numéro de téléphone</h3>
+                <input type="tel" class="form-input-custom" value="@clientTelephone" readonly>
+                <p class="info-text">Le paiement sera effectué depuis ce numéro</p>
+            </div>
+            
+            <div class="section-card">
+                <h3 class="section-title">Méthode de paiement</h3>
+                
+                <div class="payment-option" onclick="selectPayment('wave')">
+                    <div class="payment-icon">
+                        <span class="iconify" data-icon="mdi:wallet" style="font-size: 30px; color: #e6c200;"></span>
+                    </div>
+                    <div class="payment-label">Wave</div>
+                </div>
+                
+                <div class="payment-option" onclick="selectPayment('om')">
+                    <div class="payment-icon">
+                        <span class="iconify" data-icon="mdi:cellphone" style="font-size: 30px; color: #e6c200;"></span>
+                    </div>
+                    <div class="payment-label">Orange Money</div>
+                </div>
+                
+                <input type="hidden" id="selectedPayment" value="">
+            </div>
+            
+            <div class="section-card" id="zoneSection" style="display: none;">
+                <h3 class="section-title">Zone de livraison</h3>
+                
+                @foreach (var zone in zones)
+                {
+                    <div class="zone-option" onclick="selectZone(@zone.Id, @zone.PrixLivraison)">
+                        <div>
+                            <div class="zone-name">@zone.NomZone</div>
+                            @if (!string.IsNullOrEmpty(zone.Quartiers))
+                            {
+                                <small class="text-muted">@zone.Quartiers</small>
+                            }
+                        </div>
+                        <div class="zone-price">+@zone.PrixLivraison.ToString("N0") FCFA</div>
+                    </div>
+                }
+                
+                <input type="hidden" id="selectedZone" value="">
+                <input type="hidden" id="selectedZonePrice" value="0">
+            </div>
+        </div>
+        
+        <div class="col-4">
+            <div class="section-card">
+                <h3 class="section-title">Récapitulatif</h3>
+                
+                <div class="summary-row">
+                    <span>Sous-total</span>
+                    <span id="subtotal">0 FCFA</span>
+                </div>
+                
+                <div class="summary-row" id="deliveryRow" style="display: none;">
+                    <span>Frais de livraison</span>
+                    <span id="deliveryFee">0 FCFA</span>
+                </div>
+                
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total">0 FCFA</span>
+                </div>
+                
+                <button class="confirm-btn" onclick="confirmPayment()">
+                    Confirmer et payer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let selectedPayment = '';
+    let selectedZone = null;
+    let deliveryFee = 0;
+    
+    function loadCart() {
+        cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+        updateSummary();
+        checkDeliveryNeeded();
+    }
+    
+    function checkDeliveryNeeded() {
+        const hasDelivery = cart.some(item => item.commandType === 'livraison');
+        const zoneSection = document.getElementById('zoneSection');
+        const deliveryRow = document.getElementById('deliveryRow');
+        
+        if (hasDelivery) {
+            zoneSection.style.display = 'block';
+            deliveryRow.style.display = 'flex';
+        } else {
+            zoneSection.style.display = 'none';
+            deliveryRow.style.display = 'none';
+        }
+    }
+    
+    function selectPayment(method) {
+        document.querySelectorAll('.payment-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+        selectedPayment = method;
+        document.getElementById('selectedPayment').value = method;
+    }
+    
+    function selectZone(zoneId, price) {
+        document.querySelectorAll('.zone-option').forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        event.currentTarget.classList.add('selected');
+        selectedZone = zoneId;
+        deliveryFee = parseFloat(price);
+        document.getElementById('selectedZone').value = zoneId;
+        document.getElementById('selectedZonePrice').value = price;
+        updateSummary();
+    }
+    
+    function updateSummary() {
+        let subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+        let total = subtotal + deliveryFee;
+        
+        document.getElementById('subtotal').textContent = subtotal.toLocaleString('fr-FR') + ' FCFA';
+        document.getElementById('deliveryFee').textContent = deliveryFee.toLocaleString('fr-FR') + ' FCFA';
+        document.getElementById('total').textContent = total.toLocaleString('fr-FR') + ' FCFA';
+    }
+    
+    async function confirmPayment() {
+        if (!selectedPayment) {
+            alert('Veuillez sélectionner une méthode de paiement');
+            return;
+        }
+        
+        const hasDelivery = cart.some(item => item.commandType === 'livraison');
+        if (hasDelivery && !selectedZone) {
+            alert('Veuillez sélectionner une zone de livraison');
+            return;
+        }
+        
+        try {
+            const saveCartResponse = await fetch('@Url.Action("SaveCartToSession", "Commande")', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(cart)
+            });
+            
+            const saveCartData = await saveCartResponse.json();
+            if (!saveCartData.success) {
+                alert('Erreur : ' + saveCartData.message);
+                return;
+            }
+            
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '@Url.Action("ProcessCheckout", "Commande")';
+            
+            const paymentInput = document.createElement('input');
+            paymentInput.type = 'hidden';
+            paymentInput.name = 'paymentMethod';
+            paymentInput.value = selectedPayment;
+            form.appendChild(paymentInput);
+            
+            if (selectedZone) {
+                const zoneInput = document.createElement('input');
+                zoneInput.type = 'hidden';
+                zoneInput.name = 'zoneId';
+                zoneInput.value = selectedZone;
+                form.appendChild(zoneInput);
+            }
+            
+            const feeInput = document.createElement('input');
+            feeInput.type = 'hidden';
+            feeInput.name = 'deliveryFee';
+            feeInput.value = deliveryFee;
+            form.appendChild(feeInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        } catch (error) {
+            console.error('Erreur:', error);
+            alert('Une erreur est survenue lors du traitement de votre commande');
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCart();
+    });
+</script>

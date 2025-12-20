@@ -9,51 +9,71 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = gescommandeCsharp
 build_property.RootNamespace = gescommandeCsharp
-build_property.ProjectDir = C:\Users\hp\Desktop\Baila wane\ProjetsExamensL3\ProjetGestionCommande\gescommandeCsharp\gescommandeCsharp\
+build_property.ProjectDir = c:\Users\hp\Desktop\Baila wane\ProjetsExamensL3\ProjetGestionCommande\gescommandeCsharp\gescommandeCsharp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\hp\Desktop\Baila wane\ProjetsExamensL3\ProjetGestionCommande\gescommandeCsharp\gescommandeCsharp
+build_property.MSBuildProjectDirectory = c:\Users\hp\Desktop\Baila wane\ProjetsExamensL3\ProjetGestionCommande\gescommandeCsharp\gescommandeCsharp
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/DetailsBurger.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Auth/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Auth/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/DetailsBurger.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ3VlXERldGFpbHNCdXJnZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/DetailsMenu.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/DetailsMenu.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ3VlXERldGFpbHNNZW51LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/Index.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Catalogue/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0YWxvZ3VlXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Home/Index.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Commande/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tbWFuZGVcQ2hlY2tvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Commande/MesCommandes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tbWFuZGVcTWVzQ29tbWFuZGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Home/Privacy.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Shared/Error.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Panier/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFuaWVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Shared/_ValidationScriptsPartial.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/_ViewImports.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/_ViewStart.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Shared/_Layout.cshtml]
+[c:/Users/hp/Desktop/Baila wane/ProjetsExamensL3/ProjetGestionCommande/gescommandeCsharp/gescommandeCsharp/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-7t3vpsoyiz

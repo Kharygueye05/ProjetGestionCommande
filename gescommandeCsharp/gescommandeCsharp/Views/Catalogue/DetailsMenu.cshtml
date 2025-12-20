@@ -7,7 +7,7 @@
     .details-container {
         padding: 3rem 0;
     }
-    
+
     .back-btn {
         background-color: #e5e7eb;
         border: none;
@@ -21,12 +21,12 @@
         align-items: center;
         margin-bottom: 2rem;
     }
-    
+
     .back-btn:hover {
         background-color: #d1d5db;
         color: #000000;
     }
-    
+
     .product-image-large {
         width: 100%;
         height: 500px;
@@ -34,7 +34,7 @@
         border-radius: 40px;
         box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.25);
     }
-    
+
     .product-name {
         font-family: 'Geist', sans-serif;
         font-weight: 900;
@@ -42,14 +42,14 @@
         color: #111827;
         margin-bottom: 1rem;
     }
-    
+
     .product-desc {
         font-size: 1.125rem;
         color: #6b7280;
         margin-bottom: 2rem;
         line-height: 1.6;
     }
-    
+
     .price-large {
         background-color: #e6c200;
         border-radius: 30px;
@@ -60,7 +60,7 @@
         display: inline-block;
         margin-bottom: 2rem;
     }
-    
+
     .section-title {
         font-family: 'Geist', sans-serif;
         font-weight: 600;
@@ -68,7 +68,7 @@
         color: #111827;
         margin-bottom: 1.5rem;
     }
-    
+
     .menu-content-card {
         background-color: #f9fafb;
         border: 2px solid #e5e7eb;
@@ -76,7 +76,7 @@
         padding: 1.5rem;
         margin-bottom: 1.5rem;
     }
-    
+
     .menu-item {
         display: flex;
         justify-content: space-between;
@@ -84,29 +84,29 @@
         padding: 0.75rem 0;
         border-bottom: 1px solid #e5e7eb;
     }
-    
+
     .menu-item:last-child {
         border-bottom: none;
     }
-    
+
     .menu-item-label {
         font-weight: 600;
         font-size: 1.125rem;
         color: #111827;
     }
-    
+
     .menu-item-name {
         font-size: 1rem;
         color: #6b7280;
         margin-top: 0.25rem;
     }
-    
+
     .menu-item-price {
         font-weight: 600;
         font-size: 1rem;
         color: #e6c200;
     }
-    
+
     .type-card {
         background-color: #f9fafb;
         border: 2px solid #e5e7eb;
@@ -117,37 +117,37 @@
         transition: all 0.2s;
         margin-bottom: 1rem;
     }
-    
+
     .type-card:hover {
         border-color: #ffd700;
         background-color: #fffbeb;
     }
-    
+
     .type-card.selected {
         border-color: #ffd700;
         background-color: #fffbeb;
         box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.3);
     }
-    
+
     .type-icon {
         font-size: 2.5rem;
         margin-bottom: 0.5rem;
         color: #111827;
     }
-    
+
     .type-label {
         font-weight: 600;
         font-size: 1.125rem;
         color: #111827;
     }
-    
+
     .quantity-control {
         display: flex;
         align-items: center;
         gap: 1rem;
         margin: 2rem 0;
     }
-    
+
     .qty-btn {
         background-color: #e5e7eb;
         border: none;
@@ -161,18 +161,18 @@
         font-size: 1.5rem;
         font-weight: 600;
     }
-    
+
     .qty-btn:hover {
         background-color: #d1d5db;
     }
-    
+
     .qty-value {
         font-size: 1.5rem;
         font-weight: 600;
         min-width: 40px;
         text-align: center;
     }
-    
+
     .add-to-cart-btn {
         background-color: #e6c200;
         border: none;
@@ -184,11 +184,11 @@
         cursor: pointer;
         transition: transform 0.2s;
     }
-    
+
     .add-to-cart-btn:hover {
         transform: scale(1.05);
     }
-    
+
     .total-price {
         font-size: 1.5rem;
         font-weight: 700;
@@ -202,30 +202,33 @@
         <span class="iconify me-2" data-icon="ic:baseline-arrow-back" style="font-size: 20px;"></span>
         Retour au catalogue
     </a>
-    
+
     <div class="row">
         <div class="col-5">
             @if (!string.IsNullOrEmpty(Model.Image))
             {
-                <img src="@Model.Image" alt="@Model.Nom" class="product-image-large" onerror="this.src='/images/placeholder.png'">
+                <img src="@Model.Image" alt="@Model.Nom" class="product-image-large"
+                    onerror="this.src='/images/placeholder.png'">
             }
             else
             {
-                <div class="product-image-large d-flex align-items-center justify-content-center" style="background-color: #f1e5d4;">
+                <div class="product-image-large d-flex align-items-center justify-content-center"
+                    style="background-color: #f1e5d4;">
                     <span class="iconify" data-icon="mdi:food" style="font-size: 6rem; color: #d1d5db;"></span>
                 </div>
             }
         </div>
-        
+
         <div class="col-7">
             <h1 class="product-name">@Model.Nom</h1>
-            
+
             <p class="product-desc">
-                @(string.IsNullOrEmpty(Model.Description) ? "Menu complet avec burger, boisson et frites." : Model.Description)
+                @(string.IsNullOrEmpty(Model.Description) ? "Menu complet avec burger, boisson et frites." :
+                                Model.Description)
             </p>
-            
+
             <div class="price-large" id="menuPrice" data-price="@Model.Prix">@Model.Prix.ToString("N0") FCFA</div>
-            
+
             <h3 class="section-title">Contenu du menu</h3>
             <div class="menu-content-card">
                 @if (Model.Burger != null)
@@ -259,7 +262,7 @@
                     </div>
                 }
             </div>
-            
+
             <h3 class="section-title mt-4">Type de commande</h3>
             <div class="row">
                 <div class="col-4">
@@ -288,13 +291,13 @@
                 </div>
             </div>
             <input type="hidden" id="selectedType" value="">
-            
+
             <div class="quantity-control">
                 <button type="button" class="qty-btn" onclick="decreaseQty()">-</button>
                 <span class="qty-value" id="quantity">1</span>
                 <button type="button" class="qty-btn" onclick="increaseQty()">+</button>
             </div>
-            
+
             <div class="d-flex align-items-center mt-4">
                 <button class="add-to-cart-btn" onclick="addToCart()">
                     Ajouter au panier
@@ -309,23 +312,23 @@
     let menuPrice = parseFloat(@Model.Prix);
     let quantity = 1;
     let selectedType = '';
-    
+
     function selectType(card, type) {
         document.querySelectorAll('.type-card').forEach(c => {
             c.classList.remove('selected');
         });
-        
+
         card.classList.add('selected');
         selectedType = type;
         document.getElementById('selectedType').value = type;
     }
-    
+
     function increaseQty() {
         quantity++;
         document.getElementById('quantity').textContent = quantity;
         updateTotal();
     }
-    
+
     function decreaseQty() {
         if (quantity > 1) {
             quantity--;
@@ -333,39 +336,60 @@
             updateTotal();
         }
     }
-    
+
     function updateTotal() {
         let total = menuPrice * quantity;
         document.getElementById('totalPrice').textContent = total.toLocaleString('fr-FR') + ' FCFA';
     }
-    
+
     function addToCart() {
         if (!selectedType) {
             alert('Veuillez sélectionner un type de commande (Sur place, À emporter ou Livraison)');
             return;
         }
-        
+
         let total = menuPrice * quantity;
-        
+
         const cartItem = {
-            menuId: @Model.Id,
-            menuName: '@Model.Nom',
-            menuPrice: menuPrice,
+            type: 'menu',
+            id: @Model.Id,
+            name: '@Model.Nom',
+            image: '@(Model.Image ?? "")',
+            price: menuPrice,
+            commandType: selectedType,
+            quantity: quantity,
+            total: total,
             burgerId: @(Model.Burger?.Id ?? 0),
             boissonId: @(Model.ComplementBoisson?.Id ?? 0),
-            fritesId: @(Model.ComplementFrites?.Id ?? 0),
-            type: selectedType,
-            quantity: quantity,
-            total: total
+            fritesId: @(Model.ComplementFrites?.Id ?? 0)
         };
-        
-        console.log('Ajout au panier:', cartItem);
-        
+
+        let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+
+        cart.push(cartItem);
+
+        localStorage.setItem('brasilBurgerCart', JSON.stringify(cart));
+
+        updateCartBadge();
+
         alert('Menu ajouté au panier !\n\nTotal: ' + total.toLocaleString('fr-FR') + ' FCFA');
+
+        // window.location.href = '@Url.Action("Index", "Panier")';
     }
-    
-    document.addEventListener('DOMContentLoaded', function() {
+
+    function updateCartBadge() {
+        let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+        const badge = document.getElementById('cartBadge');
+        if (badge) {
+            badge.textContent = totalItems;
+            badge.style.display = totalItems > 0 ? 'inline-block' : 'none';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
         updateTotal();
+        updateCartBadge();
     });
 </script>
-

@@ -26,17 +26,14 @@ namespace BrasilBurger.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuration des types ENUM PostgreSQL
             modelBuilder.HasPostgresEnum<TypeCommande>("type_commande");
             modelBuilder.HasPostgresEnum<EtatCommande>("etat_commande");
             modelBuilder.HasPostgresEnum<ModePaiement>("mode_paiement");
 
-            // Configuration de la table users
             modelBuilder.Entity<User>()
                 .ToTable("users")
                 .HasKey(u => u.Id);
 
-            // Configuration de la table client (héritage)
             modelBuilder.Entity<Client>()
                 .ToTable("client")
                 .HasOne(c => c.User)
@@ -44,7 +41,6 @@ namespace BrasilBurger.Data
                 .HasForeignKey<Client>(c => c.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configuration de la table gestionnaire (héritage)
             modelBuilder.Entity<Gestionnaire>()
                 .ToTable("gestionnaire")
                 .HasOne(g => g.User)
@@ -52,7 +48,6 @@ namespace BrasilBurger.Data
                 .HasForeignKey<Gestionnaire>(g => g.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configuration de la table livreur (héritage)
             modelBuilder.Entity<Livreur>()
                 .ToTable("livreur")
                 .HasOne(l => l.User)
@@ -60,7 +55,6 @@ namespace BrasilBurger.Data
                 .HasForeignKey<Livreur>(l => l.Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configuration de la table burger
             modelBuilder.Entity<Burger>()
                 .ToTable("burger")
                 .HasKey(b => b.Id);
@@ -69,7 +63,6 @@ namespace BrasilBurger.Data
                 .Property(b => b.Prix)
                 .HasColumnType("decimal(10,2)");
 
-            // Configuration de la table complement
             modelBuilder.Entity<Complement>()
                 .ToTable("complement")
                 .HasKey(c => c.Id);
@@ -78,7 +71,6 @@ namespace BrasilBurger.Data
                 .Property(c => c.Prix)
                 .HasColumnType("decimal(10,2)");
 
-            // Configuration de la table menu
             modelBuilder.Entity<Menu>()
                 .ToTable("menu")
                 .HasKey(m => m.Id);
@@ -101,7 +93,6 @@ namespace BrasilBurger.Data
                 .HasForeignKey(m => m.IdComplementFrites)
                 .OnDelete(DeleteBehavior.SetNull);
 
-            // Configuration de la table zone
             modelBuilder.Entity<Zone>()
                 .ToTable("zone")
                 .HasKey(z => z.Id);
@@ -110,7 +101,6 @@ namespace BrasilBurger.Data
                 .Property(z => z.PrixLivraison)
                 .HasColumnType("decimal(10,2)");
 
-            // Configuration de la table commande
             modelBuilder.Entity<Commande>()
                 .ToTable("commande")
                 .HasKey(c => c.Id);
@@ -129,7 +119,6 @@ namespace BrasilBurger.Data
                 .Property(c => c.Montant)
                 .HasColumnType("decimal(10,2)");
 
-            // Configuration de la table ligne_commande
             modelBuilder.Entity<LigneCommande>()
                 .ToTable("ligne_commande")
                 .HasKey(lc => lc.Id);
@@ -144,7 +133,6 @@ namespace BrasilBurger.Data
                 .HasForeignKey(lc => lc.CommandeId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configuration de la table paiement
             modelBuilder.Entity<Paiement>()
                 .ToTable("paiement")
                 .HasKey(p => p.Id);

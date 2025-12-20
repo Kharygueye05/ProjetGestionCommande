@@ -239,8 +239,8 @@
             <div id="complementsSection">
                 @foreach (var complement in complements)
                 {
-                    <div class="complement-card" data-complement-id="@complement.Id" data-complement-price="@complement.Prix" onclick="toggleComplement(this, @complement.Id, @complement.Prix)">
-                        <input type="checkbox" class="complement-checkbox" id="comp_@complement.Id" data-complement-id="@complement.Id" data-complement-price="@complement.Prix" onchange="handleComplementChange(this, @complement.Id, @complement.Prix)">
+                    <div class="complement-card" data-complement-id="@complement.Id" data-complement-price="@complement.Prix" onclick="toggleComplement(@complement.Id, @complement.Prix, '@complement.Nom')">
+                        <input type="checkbox" class="complement-checkbox" id="comp_@complement.Id" onclick="event.stopPropagation()">
                         <div class="complement-info">
                             <div class="complement-name">@complement.Nom</div>
                             <div class="text-muted">@complement.Type</div>
@@ -301,32 +301,20 @@
     let selectedComplements = [];
     let selectedType = '';
     
-    function toggleComplement(card, id, price) {
-        const checkbox = card.querySelector('input[type="checkbox"]');
-        const isChecked = !checkbox.checked;
-        checkbox.checked = isChecked;
-        
-        if (isChecked) {
-            card.classList.add('selected');
-            if (!selectedComplements.find(c => c.id === id)) {
-                selectedComplements.push({ id: id, price: parseFloat(price) });
-            }
-        } else {
-            card.classList.remove('selected');
-            selectedComplements = selectedComplements.filter(c => c.id !== id);
-        }
-        
-        updateTotal();
-    }
-    
-    function handleComplementChange(checkbox, id, price) {
+    function toggleComplement(id, price, name) {
+        const checkbox = document.getElementById('comp_' + id);
         const card = checkbox.closest('.complement-card');
-        const isChecked = checkbox.checked;
         
-        if (isChecked) {
+        checkbox.checked = !checkbox.checked;
+        
+        if (checkbox.checked) {
             card.classList.add('selected');
             if (!selectedComplements.find(c => c.id === id)) {
-                selectedComplements.push({ id: id, price: parseFloat(price) });
+                selectedComplements.push({ 
+                    id: id, 
+                    price: parseFloat(price),
+                    name: name 
+                });
             }
         } else {
             card.classList.remove('selected');
@@ -379,21 +367,43 @@
         let total = itemTotal * quantity;
         
         const cartItem = {
-            burgerId: @Model.Id,
-            burgerName: '@Model.Nom',
-            burgerPrice: burgerPrice,
+            type: 'burger',
+            id: @Model.Id,
+            name: '@Model.Nom',
+            image: '@(Model.Image ?? "")',
+            price: burgerPrice,
             complements: selectedComplements,
-            type: selectedType,
+            commandType: selectedType,
             quantity: quantity,
             total: total
         };
         
-        console.log('Ajout au panier:', cartItem);
+        let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+        
+        cart.push(cartItem);
+        
+        localStorage.setItem('brasilBurgerCart', JSON.stringify(cart));
+        
+        updateCartBadge();
         
         alert('Produit ajouté au panier !\n\nTotal: ' + total.toLocaleString('fr-FR') + ' FCFA');
+        
+        // window.location.href = '@Url.Action("Index", "Panier")';
+    }
+    
+    function updateCartBadge() {
+        let cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        
+        const badge = document.getElementById('cartBadge');
+        if (badge) {
+            badge.textContent = totalItems;
+            badge.style.display = totalItems > 0 ? 'inline-block' : 'none';
+        }
     }
     
     document.addEventListener('DOMContentLoaded', function() {
         updateTotal();
+        updateCartBadge();
     });
 </script>

@@ -1,0 +1,250 @@
+@model IEnumerable<BrasilBurger.Models.Commande>
+@{
+    ViewData["Title"] = "Mes Commandes";
+}
+
+<style>
+    .commandes-container {
+        padding: 3rem 0;
+    }
+    
+    .page-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: #111827;
+        margin-bottom: 2rem;
+    }
+    
+    .filter-section {
+        background-color: #f9fafb;
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+    
+    .filter-btn {
+        border-radius: 20px;
+        padding: 0.5rem 1.25rem;
+        font-size: 1rem;
+        font-weight: 500;
+        border: 2px solid #e5e7eb;
+        margin-right: 1rem;
+        margin-bottom: 0.5rem;
+        background-color: #ffffff;
+        color: #111827;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .filter-btn:hover {
+        border-color: #ffd700;
+        background-color: #fffbeb;
+    }
+    
+    .filter-btn.active {
+        border-color: #ffd700;
+        background-color: #ffd700;
+        color: #000000;
+    }
+    
+    .commande-card {
+        background-color: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        transition: all 0.2s;
+    }
+    
+    .commande-card:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .commande-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .commande-number {
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: #111827;
+    }
+    
+    .commande-date {
+        color: #6b7280;
+        font-size: 0.875rem;
+    }
+    
+    .etat-badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+    
+    .etat-reçue {
+        background-color: #dbeafe;
+        color: #1e40af;
+    }
+    
+    .etat-preparation {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+    
+    .etat-terminee {
+        background-color: #d1fae5;
+        color: #065f46;
+    }
+    
+    .etat-annulee {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+    
+    .commande-body {
+        margin-bottom: 1rem;
+    }
+    
+    .commande-info {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #6b7280;
+    }
+    
+    .commande-montant {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #e6c200;
+    }
+    
+    .detail-btn {
+        background-color: #e6c200;
+        border: none;
+        border-radius: 20px;
+        padding: 0.5rem 1.5rem;
+        font-weight: 600;
+        color: #000000;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .detail-btn:hover {
+        transform: scale(1.05);
+    }
+    
+    .no-commandes {
+        text-align: center;
+        padding: 4rem 0;
+    }
+    
+    .no-commandes-icon {
+        font-size: 5rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+    
+    .no-commandes-text {
+        font-size: 1.5rem;
+        color: #6b7280;
+        margin-bottom: 2rem;
+    }
+</style>
+
+<div class="container commandes-container">
+    <h1 class="page-title">Mes Commandes</h1>
+    
+    <div class="filter-section">
+        <button class="filter-btn active" onclick="filterCommandes('tous')">Toutes</button>
+        <button class="filter-btn" onclick="filterCommandes('reçue')">Reçues</button>
+        <button class="filter-btn" onclick="filterCommandes('preparation')">En préparation</button>
+        <button class="filter-btn" onclick="filterCommandes('terminee')">Terminées</button>
+        <button class="filter-btn" onclick="filterCommandes('annulee')">Annulées</button>
+    </div>
+    
+    <div id="commandesList">
+        @if (Model.Any())
+        {
+            foreach (var commande in Model)
+            {
+                var etatClass = "etat-" + commande.Etat.ToString().ToLower();
+                var typeIcon = commande.TypeCommande == TypeCommande.sur_place ? "mdi:silverware-fork-knife" :
+                              commande.TypeCommande == TypeCommande.a_emporter ? "mdi:bag-checked" : "mdi:moped";
+                
+                <div class="commande-card" data-etat="@commande.Etat.ToString().ToLower()">
+                    <div class="commande-header">
+                        <div>
+                            <div class="commande-number">Commande #@commande.Id</div>
+                            <div class="commande-date">@commande.DateCommande.ToString("dd/MM/yyyy à HH:mm")</div>
+                        </div>
+                        <span class="etat-badge @etatClass">@commande.Etat.ToString()</span>
+                    </div>
+                    
+                    <div class="commande-body">
+                        <div class="commande-info">
+                            <div class="info-item">
+                                <span class="iconify" data-icon="@typeIcon" style="font-size: 20px;"></span>
+                                <span>@commande.TypeCommande.ToString().Replace("_", " ")</span>
+                            </div>
+                            @if (commande.Zone != null)
+                            {
+                                <div class="info-item">
+                                    <span class="iconify" data-icon="mdi:map-marker" style="font-size: 20px;"></span>
+                                    <span>@commande.Zone.NomZone</span>
+                                </div>
+                            }
+                        </div>
+                        <div class="commande-montant">@commande.Montant.ToString("N0") FCFA</div>
+                    </div>
+                    
+                    <button class="detail-btn" onclick="window.location.href='@Url.Action("Details", "Commande", new { id = commande.Id })'">
+                        Voir détails
+                    </button>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="no-commandes">
+                <div class="no-commandes-icon">
+                    <span class="iconify" data-icon="mdi:clipboard-text-off"></span>
+                </div>
+                <p class="no-commandes-text">Vous n'avez pas encore de commandes</p>
+                <a href="@Url.Action("Index", "Catalogue")" class="detail-btn">
+                    Commander maintenant
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    function filterCommandes(etat) {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.currentTarget.classList.add('active');
+        
+        const commandes = document.querySelectorAll('.commande-card');
+        commandes.forEach(commande => {
+            if (etat === 'tous' || commande.dataset.etat === etat) {
+                commande.style.display = 'block';
+            } else {
+                commande.style.display = 'none';
+            }
+        });
+    }
+</script>

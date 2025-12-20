@@ -1,0 +1,454 @@
+@{
+    ViewData["Title"] = "Panier";
+}
+
+<style>
+    .panier-container {
+        padding: 3rem 0;
+    }
+    
+    .panier-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+    
+    .panier-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 900;
+        font-size: 2.5rem;
+        color: #111827;
+    }
+    
+    .panier-count {
+        font-size: 1.25rem;
+        color: #6b7280;
+        margin-left: 1rem;
+    }
+    
+    .clear-cart-btn {
+        background-color: #ef4444;
+        border: none;
+        border-radius: 30px;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #ffffff;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    
+    .clear-cart-btn:hover {
+        background-color: #dc2626;
+    }
+    
+    .cart-item-card {
+        background-color: #f9fafb;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        gap: 1.5rem;
+    }
+    
+    .cart-item-image {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 15px;
+        flex-shrink: 0;
+    }
+    
+    .cart-item-image-placeholder {
+        width: 120px;
+        height: 120px;
+        background-color: #f1e5d4;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .cart-item-details {
+        flex: 1;
+    }
+    
+    .cart-item-name {
+        font-family: 'Geist', sans-serif;
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #111827;
+        margin-bottom: 0.5rem;
+    }
+    
+    .cart-item-complements {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 0.25rem;
+    }
+    
+    .cart-item-type {
+        font-size: 0.875rem;
+        color: #6b7280;
+        font-style: italic;
+    }
+    
+    .cart-item-price-section {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 1rem;
+    }
+    
+    .cart-item-quantity {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .qty-btn-small {
+        background-color: #e5e7eb;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+    
+    .qty-btn-small:hover {
+        background-color: #d1d5db;
+    }
+    
+    .qty-value-small {
+        font-size: 1.125rem;
+        font-weight: 600;
+        min-width: 30px;
+        text-align: center;
+    }
+    
+    .cart-item-price {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #111827;
+    }
+    
+    .cart-item-total {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #e6c200;
+    }
+    
+    .delete-btn {
+        background-color: #ef4444;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        margin-top: 0.5rem;
+    }
+    
+    .delete-btn:hover {
+        background-color: #dc2626;
+    }
+    
+    .summary-card {
+        background-color: #f9fafb;
+        border: 2px solid #e5e7eb;
+        border-radius: 20px;
+        padding: 2rem;
+        position: sticky;
+        top: 2rem;
+    }
+    
+    .summary-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 600;
+        font-size: 1.5rem;
+        color: #111827;
+        margin-bottom: 1.5rem;
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+        font-size: 1.125rem;
+    }
+    
+    .summary-row.total {
+        border-top: 2px solid #e5e7eb;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+    }
+    
+    .checkout-btn {
+        background-color: #e6c200;
+        border: none;
+        border-radius: 30px;
+        padding: 1rem 0;
+        width: 100%;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #000000;
+        cursor: pointer;
+        margin-top: 1.5rem;
+        transition: transform 0.2s;
+    }
+    
+    .checkout-btn:hover {
+        transform: scale(1.02);
+    }
+    
+    .empty-cart {
+        text-align: center;
+        padding: 4rem 0;
+    }
+    
+    .empty-cart-icon {
+        font-size: 5rem;
+        color: #d1d5db;
+        margin-bottom: 1rem;
+    }
+    
+    .empty-cart-text {
+        font-size: 1.5rem;
+        color: #6b7280;
+        margin-bottom: 2rem;
+    }
+    
+    .continue-shopping-btn {
+        background-color: #e6c200;
+        border: none;
+        border-radius: 30px;
+        padding: 0.75rem 2rem;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #000000;
+        text-decoration: none;
+        display: inline-block;
+        transition: transform 0.2s;
+    }
+    
+    .continue-shopping-btn:hover {
+        transform: scale(1.05);
+        color: #000000;
+    }
+</style>
+
+<div class="container panier-container">
+    <div class="panier-header">
+        <div class="d-flex align-items-center">
+            <h1 class="panier-title">Votre panier</h1>
+            <span class="panier-count" id="itemCount">0 article(s)</span>
+        </div>
+        <button class="clear-cart-btn" onclick="clearCart()">
+            <span class="iconify me-2" data-icon="mdi:delete-outline" style="font-size: 20px;"></span>
+            Vider le panier
+        </button>
+    </div>
+    
+    <div class="row">
+        <div class="col-8">
+            <div id="cartItems">
+            </div>
+            
+            <div id="emptyCart" class="empty-cart" style="display: none;">
+                <div class="empty-cart-icon">
+                    <span class="iconify" data-icon="mdi:cart-off"></span>
+                </div>
+                <p class="empty-cart-text">Votre panier est vide</p>
+                <a href="@Url.Action("Index", "Catalogue")" class="continue-shopping-btn">
+                    Continuer mes achats
+                </a>
+            </div>
+        </div>
+        
+        <div class="col-4">
+            <div class="summary-card">
+                <h3 class="summary-title">Récapitulatif</h3>
+                
+                <div class="summary-row">
+                    <span>Sous-total</span>
+                    <span id="subtotal">0 FCFA</span>
+                </div>
+                
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span id="total">0 FCFA</span>
+                </div>
+                
+                <button class="checkout-btn" onclick="proceedToCheckout()">
+                    Procéder au paiement
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    
+    function loadCart() {
+        cart = JSON.parse(localStorage.getItem('brasilBurgerCart') || '[]');
+        displayCart();
+        updateSummary();
+    }
+    
+    function displayCart() {
+        const cartItemsContainer = document.getElementById('cartItems');
+        const emptyCartDiv = document.getElementById('emptyCart');
+        const itemCountSpan = document.getElementById('itemCount');
+        
+        if (cart.length === 0) {
+            cartItemsContainer.innerHTML = '';
+            emptyCartDiv.style.display = 'block';
+            itemCountSpan.textContent = '0 article(s)';
+            return;
+        }
+        
+        emptyCartDiv.style.display = 'none';
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        itemCountSpan.textContent = totalItems + ' article(s)';
+        
+        cartItemsContainer.innerHTML = cart.map((item, index) => {
+            let typeLabel = item.commandType === 'sur_place' ? 'Sur place' : 
+                           item.commandType === 'a_emporter' ? 'À emporter' : 'Livraison';
+            
+            let complementsText = '';
+            if (item.complements && item.complements.length > 0) {
+                complementsText = '<div class="cart-item-complements">Compléments: ' + 
+                    item.complements.map(c => c.name || 'Complément').join(', ') + '</div>';
+            }
+            
+            let imageHtml = item.image ? 
+                `<img src="${item.image}" alt="${item.name}" class="cart-item-image" onerror="this.parentElement.innerHTML='<div class=\\'cart-item-image-placeholder\\'><span class=\\'iconify\\' data-icon=\\'mdi:food\\' style=\\'font-size: 3rem; color: #d1d5db;\\'></span></div>'">` :
+                `<div class="cart-item-image-placeholder"><span class="iconify" data-icon="mdi:food" style="font-size: 3rem; color: #d1d5db;"></span></div>`;
+            
+            return `
+                <div class="cart-item-card">
+                    ${imageHtml}
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-name">${item.name}</h3>
+                        ${complementsText}
+                        <div class="cart-item-type">${typeLabel}</div>
+                    </div>
+                    <div class="cart-item-price-section">
+                        <div class="cart-item-quantity">
+                            <button class="qty-btn-small" onclick="updateQuantity(${index}, -1)">-</button>
+                            <span class="qty-value-small">${item.quantity}</span>
+                            <button class="qty-btn-small" onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                        <div class="cart-item-price">${item.price.toLocaleString('fr-FR')} FCFA</div>
+                        <div class="cart-item-total">${item.total.toLocaleString('fr-FR')} FCFA</div>
+                        <button class="delete-btn" onclick="removeItem(${index})">
+                            <span class="iconify" data-icon="mdi:delete" style="color: white; font-size: 20px;"></span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    function updateQuantity(index, change) {
+        if (index >= 0 && index < cart.length) {
+            cart[index].quantity += change;
+            
+            if (cart[index].quantity <= 0) {
+                removeItem(index);
+                return;
+            }
+            
+            let itemPrice = cart[index].price;
+            if (cart[index].complements) {
+                itemPrice += cart[index].complements.reduce((sum, c) => sum + parseFloat(c.price || 0), 0);
+            }
+            cart[index].total = itemPrice * cart[index].quantity;
+            
+            saveCart();
+            displayCart();
+            updateSummary();
+            updateCartBadge();
+        }
+    }
+    
+    function removeItem(index) {
+        if (confirm('Voulez-vous vraiment supprimer cet article du panier ?')) {
+            cart.splice(index, 1);
+            saveCart();
+            displayCart();
+            updateSummary();
+            updateCartBadge();
+        }
+    }
+    
+    function clearCart() {
+        if (cart.length === 0) {
+            alert('Votre panier est déjà vide');
+            return;
+        }
+        
+        if (confirm('Voulez-vous vraiment vider tout votre panier ?')) {
+            cart = [];
+            saveCart();
+            displayCart();
+            updateSummary();
+            updateCartBadge();
+        }
+    }
+    
+    function updateSummary() {
+        let subtotal = cart.reduce((sum, item) => sum + item.total, 0);
+        let total = subtotal; 
+        
+        document.getElementById('subtotal').textContent = subtotal.toLocaleString('fr-FR') + ' FCFA';
+        document.getElementById('total').textContent = total.toLocaleString('fr-FR') + ' FCFA';
+    }
+    
+    function saveCart() {
+        localStorage.setItem('brasilBurgerCart', JSON.stringify(cart));
+    }
+    
+    function updateCartBadge() {
+        let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        const badge = document.getElementById('cartBadge');
+        if (badge) {
+            badge.textContent = totalItems;
+            badge.style.display = totalItems > 0 ? 'inline-block' : 'none';
+        }
+    }
+    
+    function proceedToCheckout() {
+        if (cart.length === 0) {
+            alert('Votre panier est vide');
+            return;
+        }
+        
+        const isLoggedIn = @(Context.Session.GetInt32("ClientId").HasValue ? "true" : "false");
+        
+        if (!isLoggedIn) {
+            window.location.href = '@Url.Action("Login", "Auth", new { returnUrl = Url.Action("Checkout", "Commande") })';
+        } else {
+            window.location.href = '@Url.Action("Checkout", "Commande")';
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        loadCart();
+    });
+</script>
