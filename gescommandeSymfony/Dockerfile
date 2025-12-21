@@ -16,7 +16,7 @@ WORKDIR /app
 COPY . .
 
 # Installer les dépendances PHP du projet
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 # Exposer le port pour Symfony
 EXPOSE 8000
