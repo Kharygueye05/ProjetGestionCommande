@@ -63,4 +63,122 @@ class CommandeRepository extends ServiceEntityRepository
 
         return $qb->getQuery();
     }
+
+    public function getTopProduitsVendusDuJour(): array
+    {
+        $todayStart = new \DateTime('today');
+        $todayEnd = new \DateTime('today 23:59:59');
+
+        $query = $this->getEntityManager()->createQuery('
+            SELECT 
+                lc.produit_nom as nom,
+                SUM(lc.quantite) as quantite_vendue,
+                lc.type_produit as type
+            FROM App\Entity\LigneCommande lc
+            JOIN lc.commande c
+            WHERE c.date_commande BETWEEN :debut AND :fin
+            AND c.etat != :etat_annulee
+            GROUP BY lc.produit_id, lc.produit_nom, lc.type_produit
+            ORDER BY quantite_vendue DESC
+        ')
+            ->setParameter('debut', $todayStart)
+            ->setParameter('fin', $todayEnd)
+            ->setParameter('etat_annulee', 'annulee');
+
+        $result = $query->getResult();
+        
+        $topProduits = array_slice($result, 0, 4);
+        $maxQuantite = $topProduits ? max(array_column($topProduits, 'quantite_vendue')) : 1;
+        
+        foreach ($topProduits as &$produit) {
+            $produit['pourcentage'] = $maxQuantite > 0 ? ($produit['quantite_vendue'] / $maxQuantite) * 100 : 0;
+        }
+        
+        return $topProduits;
+    }
+
+    public function findCommandesRecentes(int $limit = 5): array
+    {
+        return $this->createQueryBuilder('c')
+            ->leftJoin('c.ligneCommandes', 'lc')
+            ->addSelect('lc')
+            ->leftJoin('c.client', 'cli')
+            ->leftJoin('cli.user', 'user')
+            ->orderBy('c.date_commande', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function countCommandesEnCoursDuJour(): int
+    {
+        $todayStart = new \DateTime('today');
+        $todayEnd = new \DateTime('today 23:59:59');
+
+        $result = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.date_commande BETWEEN :debut AND :fin')
+            ->andWhere('c.etat IN (:etats)')
+            ->setParameter('debut', $todayStart)
+            ->setParameter('fin', $todayEnd)
+            ->setParameter('etats', ['reçue', 'preparation'])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ? (int) $result : 0;
+    }
+
+    public function countCommandesTermineesDuJour(): int
+    {
+        $todayStart = new \DateTime('today');
+        $todayEnd = new \DateTime('today 23:59:59');
+
+        $result = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.date_commande BETWEEN :debut AND :fin')
+            ->andWhere('c.etat = :etat')
+            ->setParameter('debut', $todayStart)
+            ->setParameter('fin', $todayEnd)
+            ->setParameter('etat', 'terminee')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ? (int) $result : 0;
+    }
+
+    public function countCommandesAnnuleesDuJour(): int
+    {
+        $todayStart = new \DateTime('today');
+        $todayEnd = new \DateTime('today 23:59:59');
+
+        $result = $this->createQueryBuilder('c')
+            ->select('COUNT(c.id)')
+            ->where('c.date_commande BETWEEN :debut AND :fin')
+            ->andWhere('c.etat = :etat')
+            ->setParameter('debut', $todayStart)
+            ->setParameter('fin', $todayEnd)
+            ->setParameter('etat', 'annulee')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ? (int) $result : 0;
+    }
+
+    public function getRecettesDuJour(): float
+    {
+        $todayStart = new \DateTime('today');
+        $todayEnd = new \DateTime('today 23:59:59');
+
+        $result = $this->createQueryBuilder('c')
+            ->select('SUM(c.montant)')
+            ->where('c.date_commande BETWEEN :debut AND :fin')
+            ->andWhere('c.etat != :etat')
+            ->setParameter('debut', $todayStart)
+            ->setParameter('fin', $todayEnd)
+            ->setParameter('etat', 'annulee')
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ? (float) $result : 0.0;
+    }
 }
