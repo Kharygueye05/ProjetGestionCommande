@@ -1,0 +1,309 @@
+{# templates/commande/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Commandes{% endblock %}
+
+{% block stylesheets %}
+<style>
+    /* Styles pour la modal */
+    .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(5px);
+    }
+    
+    .modal-content {
+        border-radius: 12px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+    
+    .modal-header {
+        background-color: #111827;
+        color: white;
+        border-radius: 12px 12px 0 0;
+        padding: 20px;
+    }
+    
+    .modal-title {
+        font-family: 'Geist', sans-serif;
+        font-weight: 600;
+    }
+    
+    .btn-close {
+        filter: invert(1);
+    }
+    
+    /* Pagination */
+    .pagination .page-link {
+        color: #111827;
+        border: 1px solid #E5E7EB;
+        padding: 8px 16px;
+        margin: 0 4px;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+    
+    .pagination .page-item.active .page-link {
+        background-color: #111827;
+        border-color: #111827;
+        color: white;
+    }
+    
+    .pagination .page-item.disabled .page-link {
+        color: #9CA3AF;
+        background-color: #F9FAFB;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <!-- Page Header -->
+    <header class="page-header">
+        <h1 class="page-title">Gestion des Commandes</h1>
+        <p class="page-subtitle">Gérez et suivez toutes les commandes</p>
+    </header>
+    
+    <!-- Search Form (EXACTEMENT comme dans le Figma) -->
+    <div class="search-card">
+        <form method="get" class="row g-4">
+            <div class="col-auto">
+                <label class="search-label">
+                    <iconify-icon icon="mingcute:search-line"></iconify-icon>
+                    Rechercher client
+                </label>
+                <input type="text" 
+                       class="search-input" 
+                       name="client" 
+                       placeholder="Nom du client..."
+                       value="{{ filters.client }}">
+            </div>
+            <div class="col-auto">
+                <label class="search-label">
+                    <iconify-icon icon="mdi:calendar-blank"></iconify-icon>
+                    Date
+                </label>
+                <input type="text" 
+                       class="search-input" 
+                       name="date" 
+                       placeholder="jj/mm/aaaa"
+                       value="{{ filters.date }}">
+            </div>
+            <div class="col-auto">
+                <label class="search-label">
+                    <iconify-icon icon="tabler:burger"></iconify-icon>
+                    Type produit
+                </label>
+                <select class="search-select" name="produitType">
+                    <option value="">Tous les produits</option>
+                    {% for key, label in produitTypes %}
+                        <option value="{{ key }}" {{ filters.produitType == key ? 'selected' : '' }}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto">
+                <label class="search-label">
+                    <iconify-icon icon="fluent-mdl2:sync-status"></iconify-icon>
+                    Etat
+                </label>
+                <select class="search-select" name="etat">
+                    <option value="">Tous les états</option>
+                    {% for key, label in etats %}
+                        <option value="{{ key }}" {{ filters.etat == key ? 'selected' : '' }}>
+                            {{ label }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-auto d-flex align-items-end">
+                <button type="submit" style="
+                    background-color: #111827;
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    padding: 4px 15px;
+                    height: 31px;
+                    font-size: 12px;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    cursor: pointer;
+                ">
+                    <iconify-icon icon="mingcute:search-line" style="font-size: 15px;"></iconify-icon>
+                    Rechercher
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Orders Table -->
+    <div class="table-container">
+        <table class="orders-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Client</th>
+                    <th>Type</th>
+                    <th>Etat</th>
+                    <th>Montant FCFA</th>
+                    <th>Produits</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for commande in commandes %}
+                    <tr>
+                        <td>{{ commande.id }}</td>
+                        <td>
+                            {{ commande.date }}<br>
+                            {{ commande.heure }}
+                        </td>
+                        <td>
+                            <div class="client-info">
+                                <span class="client-name">{{ commande.clientPrenom }} {{ commande.clientNom }}</span>
+                                <span class="client-phone">{{ commande.clientTelephone }}</span>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge-type">{{ commande.getTypeDisplay() }}</span>
+                        </td>
+                        <td>
+                            {# Seulement les états "reçue" et "preparation" ont le dropdown #}
+                            {% if commande.etat in ['reçue', 'preparation'] %}
+                                <div class="status-dropdown">
+                                    <span class="{{ commande.getBadgeEtatClass() }}">
+                                        {{ commande.getEtatDisplay() }}
+                                        <span class="arrow">&lt;</span>
+                                    </span>
+                                    <div class="status-dropdown-content">
+                                        {% if commande.etat == 'reçue' %}
+                                            {# Pour "reçue": préparation, terminer, annuler #}
+                                            <div class="status-option" onclick="changeEtat({{ commande.id }}, 'preparation')">
+                                                <iconify-icon icon="mdi:clock-outline" style="color: orange; margin-right: 5px;"></iconify-icon>
+                                                Mettre en préparation
+                                            </div>
+                                            <div class="status-option" onclick="changeEtat({{ commande.id }}, 'terminee')">
+                                                <iconify-icon icon="mdi:check-all" style="color: purple; margin-right: 5px;"></iconify-icon>
+                                                Terminer
+                                            </div>
+                                            <div class="status-option" onclick="annulerCommande({{ commande.id }})" style="color: red;">
+                                                <iconify-icon icon="mdi:cancel" style="color: red; margin-right: 5px;"></iconify-icon>
+                                                Annuler
+                                            </div>
+                                        {% elseif commande.etat == 'preparation' %}
+                                            {# Pour "preparation": seulement terminer #}
+                                            <div class="status-option" onclick="changeEtat({{ commande.id }}, 'terminee')">
+                                                <iconify-icon icon="mdi:check-all" style="color: purple; margin-right: 5px;"></iconify-icon>
+                                                Terminer
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                {# Pour "terminée" et "annulée": pas de dropdown #}
+                                <span class="{{ commande.getBadgeEtatClass() }}">
+                                    {{ commande.getEtatDisplay() }}
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>{{ commande.montant }}</td>
+                        <td>
+                            {% for produit in commande.produits %}
+                                <div class="product-name">
+                                    {{ produit.nom }} x{{ produit.quantite }}
+                                </div>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            <button class="action-btn" onclick="openModal({{ commande.id }})" title="Voir les détails">
+                                <iconify-icon icon="hugeicons:view"></iconify-icon>
+                            </button>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <div style="color: #6B7280; font-size: 16px;">
+                                <iconify-icon icon="mdi:package-variant-remove" style="font-size: 48px; margin-bottom: 10px;"></iconify-icon>
+                                <p>Aucune commande trouvée</p>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Pagination -->
+        {% if pagination|length > 0 %}
+            <div class="p-3 border-top">
+                <div class="d-flex justify-content-center">
+                    {{ knp_pagination_render(pagination) }}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Modal pour les détails -->
+    <div class="modal fade" id="commandeModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <!-- Le contenu sera chargé ici par JavaScript -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function changeEtat(commandeId, etat) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `{{ path('app_commande_changer_etat', {'id': '__ID__'}) }}`.replace('__ID__', commandeId);
+            
+            // Ajouter le token CSRF
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = '_token';
+            csrfInput.value = '{{ csrf_token('change_etat') }}';
+            form.appendChild(csrfInput);
+            
+            const etatInput = document.createElement('input');
+            etatInput.type = 'hidden';
+            etatInput.name = 'etat';
+            etatInput.value = etat;
+            form.appendChild(etatInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+        
+        function annulerCommande(commandeId) {
+            if (confirm('Êtes-vous sûr de vouloir annuler cette commande ?')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `{{ path('app_commande_annuler', {'id': '__ID__'}) }}`.replace('__ID__', commandeId);
+                
+                // Ajouter le token CSRF
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = '{{ csrf_token('annuler') }}';
+                form.appendChild(csrfInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+        
+        function openModal(commandeId) {
+            // Charger le contenu de la modal
+            fetch(`/commande/${commandeId}/modal`)
+                .then(response => response.text())
+                .then(html => {
+                    document.querySelector('#commandeModal .modal-content').innerHTML = html;
+                    const modal = new bootstrap.Modal(document.getElementById('commandeModal'));
+                    modal.show();
+                });
+        }
+    </script>
+{% endblock %}

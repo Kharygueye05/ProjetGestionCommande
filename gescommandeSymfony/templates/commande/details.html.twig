@@ -1,0 +1,94 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de la commande #{{ commande.id }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-0">Commande #{{ commande.id }}</h1>
+                <p class="text-muted mb-0">{{ commande.dateCommande|date('d/m/Y H:i') }}</p>
+            </div>
+            <div>
+                <a href="{{ path('app_commande_index') }}" class="btn btn-secondary">
+                    <iconify-icon icon="mdi:arrow-left" style="margin-right: 5px;"></iconify-icon>
+                    Retour
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Produits commandés</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for ligne in lignes %}
+                                    <tr>
+                                        <td>{{ ligne.produit_nom }}</td>
+                                        <td>{{ ligne.quantite }}</td>
+                                        <td>{{ ligne.prix_unitaire|number_format(0, ',', ' ') }} FCFA</td>
+                                        <td>{{ ligne.total_ligne|number_format(0, ',', ' ') }} FCFA</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end"><strong>Total</strong></td>
+                                    <td><strong>{{ montant_total|number_format(0, ',', ' ') }} FCFA</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Informations</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <strong>État:</strong><br>
+                            <span class="badge {{ commande.etat == 'reçue' ? 'bg-primary' : commande.etat == 'preparation' ? 'bg-warning' : commande.etat == 'terminee' ? 'bg-success' : 'bg-danger' }}">
+                                {{ commande.etat|title }}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <strong>Type:</strong><br>
+                            <span class="badge bg-info">
+                                {{ commande.typeCommande|replace({'_': ' '})|title }}
+                            </span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <strong>Client:</strong><br>
+                            {{ commande.client.user.prenom }} {{ commande.client.user.nom }}<br>
+                            <small class="text-muted">{{ commande.client.user.telephone }}</small>
+                        </div>
+                        
+                        {% if commande.zone %}
+                            <div class="mb-3">
+                                <strong>Zone de livraison:</strong><br>
+                                {{ commande.zone.nomZone }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{# templates/commande/modal.html.twig #}
+<div class="modal-header">
+    <h5 class="modal-title">Commande #{{ commande.id }}</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-8">
+            <h6 class="mb-3" style="color: #111827; font-weight: 600;">Produits commandés</h6>
+            <table class="table table-sm" style="font-size: 14px;">
+                <thead>
+                    <tr style="background-color: #F9FAFB;">
+                        <th>Produit</th>
+                        <th class="text-center">Quantité</th>
+                        <th class="text-end">Prix unitaire</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ligne in lignes %}
+                        <tr>
+                            <td>{{ ligne.produitNom }}</td>
+                            <td class="text-center">{{ ligne.quantite }}</td>
+                            <td class="text-end">{{ ligne.prixUnitaire|number_format(0, ',', ' ') }} FCFA</td>
+                            <td class="text-end">{{ ligne.getTotalLigne()|number_format(0, ',', ' ') }} FCFA</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr style="background-color: #F9FAFB;">
+                        <td colspan="3" class="text-end"><strong>Total général</strong></td>
+                        <td class="text-end"><strong>{{ montant_total|number_format(0, ',', ' ') }} FCFA</strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h6 class="mb-3" style="color: #111827; font-weight: 600;">Informations</h6>
+            
+            <div class="mb-3">
+                <p class="mb-1" style="color: #6B7280; font-size: 13px;">Date & Heure</p>
+                <p class="mb-0" style="font-weight: 500;">
+                    {{ commande.dateCommande|date('d/m/Y') }} à {{ commande.dateCommande|date('H:i') }}
+                </p>
+            </div>
+            
+            <div class="mb-3">
+                <p class="mb-1" style="color: #6B7280; font-size: 13px;">État</p>
+                <span class="badge 
+                    {% if commande.etat == 'reçue' %}badge-status received
+                    {% elseif commande.etat == 'preparation' %}badge-status preparation
+                    {% elseif commande.etat == 'terminee' %}badge-status completed
+                    {% else %}badge-status cancelled{% endif %}"
+                    style="font-size: 12px; padding: 4px 12px;">
+                    {{ commande.etat|title }}
+                </span>
+            </div>
+            
+            <div class="mb-3">
+                <p class="mb-1" style="color: #6B7280; font-size: 13px;">Type</p>
+                <span class="badge-type" style="font-size: 12px; padding: 4px 12px;">
+                    {{ commande.typeCommande|replace({'_': ' '})|title }}
+                </span>
+            </div>
+            
+            <div class="mb-3">
+                <p class="mb-1" style="color: #6B7280; font-size: 13px;">Client</p>
+                <p class="mb-0" style="font-weight: 500;">
+                    {{ commande.client.user.prenom }} {{ commande.client.user.nom }}
+                </p>
+                <p class="mb-0" style="color: #6B7280; font-size: 13px;">
+                    {{ commande.client.user.telephone }}
+                </p>
+            </div>
+            
+            {% if commande.zone %}
+                <div class="mb-3">
+                    <p class="mb-1" style="color: #6B7280; font-size: 13px;">Zone de livraison</p>
+                    <p class="mb-0" style="font-weight: 500;">{{ commande.zone.nomZone }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="
+        background-color: #6B7280;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 6px;
+        font-size: 14px;
+    ">
+        Fermer
+    </button>
+</div>
