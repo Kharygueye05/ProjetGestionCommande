@@ -1,0 +1,499 @@
+<div class="section-header">
+    <h2 class="section-title">Zones sans Livreur</h2>
+</div>
+
+{% if zonesNonAffectees|length > 0 %}
+<div class="unassigned-zones-grid">
+    {% for zone in zonesNonAffectees %}
+    <div class="zone-card">
+        <h3 class="zone-name">{{ zone.nomZone }}</h3>
+        <div class="zone-neighborhoods">
+            {% for quartier in zone.quartiers|slice(0, 3) %}
+                <span class="neighborhood-badge">{{ quartier }}</span>
+            {% endfor %}
+            {% if zone.quartiers|length > 3 %}
+                <span class="neighborhood-badge">+{{ zone.quartiers|length - 3 }}</span>
+            {% endif %}
+        </div>
+        <div class="zone-price">{{ zone.prixLivraison|number_format(0, ',', ' ') }} FCFA</div>
+        <div class="zone-price-label">Prix de livraison</div>
+        
+        <div class="livreur-section">
+            <label class="livreur-label">Affecter un livreur</label>
+            <select class="livreur-select" id="livreur-select-{{ zone.id }}">
+                <option value="">Sélectionner un livreur</option>
+                {% for livreur in allLivreurs %}
+                    <option value="{{ livreur.id }}">
+                        {{ livreur.user.prenom }} {{ livreur.user.nom }}
+                    </option>
+                {% endfor %}
+            </select>
+            <button class="save-btn affecter-btn" data-zone-id="{{ zone.id }}">
+                Enregistrer
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <iconify-icon icon="lets-icons:check-fill" width="64" height="64"></iconify-icon>
+    <div class="empty-state-title">Toutes les zones sont affectées</div>
+</div>
+{% endif %}
+
+{% if livreurs|length > 0 %}
+<div class="recap-section">
+    <h3 class="recap-title">Zones Affectées</h3>
+    <div class="recap-grid">
+        {% for livreur in livreurs %}
+        <div class="livreur-recap-card">
+            <div class="livreur-recap-header">
+                <div class="livreur-icon">
+                    <iconify-icon icon="octicon:person-16"></iconify-icon>
+                </div>
+                <div class="livreur-info">
+                    <h3>{{ livreur.prenom }} {{ livreur.nom }}</h3>
+                    <p>{{ livreur.telephone }}</p>
+                </div>
+                <span class="zones-count">{{ livreur.zonesAffectees|length }} Zone(s)</span>
+            </div>
+            
+            {% if livreur.zonesAffectees|length > 0 %}
+            <ul class="assigned-zones-list">
+                {% for zone in livreur.zonesAffectees %}
+                <li class="assigned-zone-item" data-zone-id="{{ zone.id }}">
+                    <div class="zone-info-recap">
+                        <h4>{{ zone.nomZone }}</h4>
+                        <div class="zone-neighborhoods-recap">
+                            {% for quartier in zone.quartiers|slice(0, 2) %}
+                                <span class="neighborhood-badge">{{ quartier }}</span>
+                            {% endfor %}
+                            {% if zone.quartiers|length > 2 %}
+                                <span class="neighborhood-badge">+{{ zone.quartiers|length - 2 }}</span>
+                            {% endif %}
+                        </div>
+                        <div class="zone-price-recap">
+                            {{ zone.prixLivraison|number_format(0, ',', ' ') }} FCFA
+                        </div>
+                    </div>
+                    <div class="modify-section">
+                        <select class="livreur-select" data-zone-id="{{ zone.id }}">
+                            <option value="">Changer de livreur</option>
+                            {% for liv in allLivreurs %}
+                                <option value="{{ liv.id }}" {{ liv.id == livreur.id ? 'selected' : '' }}>
+                                    {{ liv.user.prenom }} {{ liv.user.nom }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button class="modify-btn" 
+                                data-zone-id="{{ zone.id }}">
+                            Modifier
+                        </button>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<style>
+/* Styles exactement comme dans votre Figma */
+.unassigned-zones-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+.zone-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.25);
+    padding: 20px;
+    min-height: 260px;
+    position: relative;
+}
+
+.zone-name {
+    font-family: 'Geist', sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+    color: #111827;
+    margin-bottom: 15px;
+}
+
+.zone-neighborhoods {
+    display: flex;
+    gap: 11px;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.neighborhood-badge {
+    background-color: #E5E7EB;
+    color: #111827;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.zone-price {
+    font-family: 'Geist', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    color: #FFD700; /* Jaune Figma */
+    margin-bottom: 5px;
+}
+
+.zone-price-label {
+    font-family: 'Manrope', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 20px;
+}
+
+.livreur-section {
+    border-top: 1px solid #E5E7EB;
+    padding-top: 15px;
+    margin-top: 15px;
+}
+
+.livreur-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.livreur-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #E5E7EB;
+    border-radius: 6px;
+    font-family: 'Manrope', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #111827;
+    background-color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.livreur-select:focus {
+    outline: none;
+    border-color: #FFD700;
+}
+
+.save-btn {
+    background-color: #FFD700; /* Jaune Figma */
+    color: black; /* Noir Figma */
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.save-btn:hover {
+    background-color: #E6C200;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #F9FAFB;
+    border-radius: 15px;
+    margin-bottom: 60px;
+}
+
+.empty-state iconify-icon {
+    font-size: 64px;
+    color: #D1D5DB;
+    margin-bottom: 20px;
+}
+
+.empty-state-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #6B7280;
+    margin-bottom: 10px;
+}
+
+/* Recap Section */
+.recap-section {
+    margin-top: 60px;
+    padding-top: 40px;
+    border-top: 2px solid #E5E7EB;
+}
+
+.recap-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #111827;
+    margin-bottom: 30px;
+}
+
+.recap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.livreur-recap-card {
+    background-color: #F9FAFB;
+    border-radius: 15px;
+    border: 2px solid #E5E7EB;
+    padding: 25px;
+}
+
+.livreur-recap-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #FFD700; /* Jaune Figma */
+}
+
+.livreur-icon {
+    background-color: #FFD700; /* Jaune Figma */
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.livreur-icon iconify-icon {
+    font-size: 24px;
+    color: #111827;
+}
+
+.livreur-info h3 {
+    font-family: 'Geist', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    color: #111827;
+    margin: 0 0 5px 0;
+}
+
+.livreur-info p {
+    font-family: 'Manrope', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: #6B7280;
+    margin: 0;
+}
+
+.zones-count {
+    background-color: #FFD700; /* Jaune Figma */
+    color: #111827; /* Noir Figma */
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    margin-left: auto;
+}
+
+.assigned-zones-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.assigned-zone-item {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.1);
+}
+
+.zone-info-recap {
+    margin-bottom: 15px;
+}
+
+.zone-info-recap h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 8px 0;
+}
+
+.zone-neighborhoods-recap {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+}
+
+.zone-neighborhoods-recap .neighborhood-badge {
+    font-size: 10px;
+}
+
+.zone-price-recap {
+    font-family: 'Geist', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+    color: #FFD700; /* Jaune Figma */
+    margin-bottom: 15px;
+}
+
+.modify-section {
+    border-top: 1px solid #E5E7EB;
+    padding-top: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.modify-section .livreur-select {
+    flex: 1;
+    margin-bottom: 0;
+    font-size: 13px;
+    padding: 6px 10px;
+}
+
+.modify-btn {
+    background-color: #E5E7EB;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.modify-btn:hover {
+    background-color: #D1D5DB;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.affecter-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const zoneId = this.getAttribute('data-zone-id');
+            const livreurSelect = document.getElementById(`livreur-select-${zoneId}`);
+            const livreurId = livreurSelect.value;
+            
+            if (!livreurId) {
+                alert('Veuillez sélectionner un livreur');
+                return;
+            }
+            
+            affecterLivreur(zoneId, livreurId);
+        });
+    });
+    
+    document.querySelectorAll('.modify-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const zoneId = this.getAttribute('data-zone-id');
+            const livreurSelect = document.querySelector(`.livreur-select[data-zone-id="${zoneId}"]`);
+            const nouveauLivreurId = livreurSelect.value;
+            
+            if (!nouveauLivreurId) {
+                alert('Veuillez sélectionner un livreur');
+                return;
+            }
+            
+            modifierAffectation(zoneId, nouveauLivreurId);
+        });
+    });
+    
+    function affecterLivreur(zoneId, livreurId) {
+        const formData = new FormData();
+        formData.append('zone_id', zoneId);
+        formData.append('livreur_id', livreurId);
+        
+        fetch('{{ path("app_livraisons_affecter") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                // Recharger l'onglet affectations
+                location.reload();
+            } else {
+                showAlert(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showAlert('Une erreur est survenue', 'error');
+        });
+    }
+    
+    function modifierAffectation(zoneId, nouveauLivreurId) {
+        const formData = new FormData();
+        formData.append('zone_id', zoneId);
+        formData.append('livreur_id', nouveauLivreurId);
+        
+        fetch('{{ path("app_livraisons_modifier") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                // Recharger l'onglet affectations
+                location.reload();
+            } else {
+                showAlert(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showAlert('Une erreur est survenue', 'error');
+        });
+    }
+    
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
+        alertDiv.style.position = 'fixed';
+        alertDiv.style.top = '20px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '1000';
+        alertDiv.style.minWidth = '300px';
+        
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+});
+</script>

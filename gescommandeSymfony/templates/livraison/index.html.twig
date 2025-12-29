@@ -1,0 +1,253 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Livraisons - Brasil Burger{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .delivery-tabs {
+        display: flex;
+        gap: 0;
+        margin-bottom: 40px;
+        border-bottom: none;
+    }
+    
+    .tab-btn {
+        background: transparent;
+        border: none;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: rgba(115,116,114,0.89);
+        border-bottom: 2px solid transparent;
+        transition: all 0.3s;
+    }
+    
+    .tab-btn iconify-icon {
+        font-size: 24px;
+    }
+    
+    .tab-btn.active {
+        color: #FFD700; /* Jaune Figma */
+        border-bottom: 2px solid #FFD700;
+    }
+    
+    .tab-btn:hover {
+        color: #FFD700;
+    }
+    
+    .tab-content {
+        min-height: 500px;
+    }
+    
+    .loading-spinner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px;
+        color: #FFD700;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <header class="page-header">
+        <h1 class="page-title">Gestion des Livraisons</h1>
+        <p class="page-subtitle">Gérez les zones, les livreurs et les affectations</p>
+    </header>
+    
+    <div class="delivery-tabs">
+        <button class="tab-btn active" data-tab="zones">
+            <iconify-icon icon="mingcute:location-line"></iconify-icon>
+            <span>Zones de Livraison</span>
+        </button>
+        <button class="tab-btn" data-tab="livreurs">
+            <iconify-icon icon="octicon:person-16"></iconify-icon>
+            <span>Livreurs</span>
+        </button>
+        <button class="tab-btn" data-tab="affectations">
+            <iconify-icon icon="mdi:delivery-dining-outline"></iconify-icon>
+            <span>Affectations</span>
+        </button>
+    </div>
+    
+    <div class="tab-content" id="tabContent">
+        <div class="loading-spinner">
+            <iconify-icon icon="eos-icons:loading" width="48" height="48"></iconify-icon>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContent = document.getElementById('tabContent');
+    
+    loadTabContent('zones');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const tabName = this.getAttribute('data-tab');
+            
+            // Mettre à jour les classes actives
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Charger le contenu de l'onglet
+            loadTabContent(tabName);
+        });
+    });
+    
+    function loadTabContent(tabName) {
+        tabContent.innerHTML = `
+            <div class="loading-spinner">
+                <iconify-icon icon="eos-icons:loading" width="48" height="48"></iconify-icon>
+            </div>
+        `;
+        
+        let url;
+        switch(tabName) {
+            case 'zones':
+                url = '{{ path("app_livraisons_zones") }}';
+                break;
+            case 'livreurs':
+                url = '{{ path("app_livraisons_livreurs") }}';
+                break;
+            case 'affectations':
+                url = '{{ path("app_livraisons_affectations") }}';
+                break;
+            default:
+                url = '{{ path("app_livraisons_zones") }}';
+        }
+        
+        fetch(url)
+            .then(response => response.text())
+            .then(html => {
+                tabContent.innerHTML = html;
+                
+                // Réinitialiser les événements pour les nouveaux éléments
+                if (tabName === 'affectations') {
+                    initAffectationEvents();
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                tabContent.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #6B7280;">
+                        Erreur lors du chargement du contenu. Veuillez réessayer.
+                    </div>
+                `;
+            });
+    }
+    
+    function initAffectationEvents() {
+        document.querySelectorAll('.affecter-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const zoneId = this.getAttribute('data-zone-id');
+                const livreurSelect = document.getElementById(`livreur-select-${zoneId}`);
+                const livreurId = livreurSelect.value;
+                
+                if (!livreurId) {
+                    showAlert('Veuillez sélectionner un livreur', 'warning');
+                    return;
+                }
+                
+                affecterLivreur(zoneId, livreurId);
+            });
+        });
+        
+        document.querySelectorAll('.modifier-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const zoneId = this.getAttribute('data-zone-id');
+                const livreurSelect = document.querySelector(`[data-zone-id="${zoneId}"] .livreur-select`);
+                const nouveauLivreurId = livreurSelect.value;
+                
+                if (!nouveauLivreurId) {
+                    showAlert('Veuillez sélectionner un livreur', 'warning');
+                    return;
+                }
+                
+                modifierAffectation(zoneId, nouveauLivreurId);
+            });
+        });
+    }
+    
+    function affecterLivreur(zoneId, livreurId) {
+        const formData = new FormData();
+        formData.append('zone_id', zoneId);
+        formData.append('livreur_id', livreurId);
+        
+        fetch('{{ path("app_livraisons_affecter") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                // Recharger l'onglet affectations
+                loadTabContent('affectations');
+            } else {
+                showAlert(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showAlert('Une erreur est survenue', 'error');
+        });
+    }
+    
+    function modifierAffectation(zoneId, nouveauLivreurId) {
+        const formData = new FormData();
+        formData.append('zone_id', zoneId);
+        formData.append('livreur_id', nouveauLivreurId);
+        
+        fetch('{{ path("app_livraisons_modifier") }}', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert(data.message, 'success');
+                // Recharger l'onglet affectations
+                loadTabContent('affectations');
+            } else {
+                showAlert(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erreur:', error);
+            showAlert('Une erreur est survenue', 'error');
+        });
+    }
+    
+    function showAlert(message, type) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'error' ? 'danger' : 'success'} alert-dismissible fade show`;
+        alertDiv.style.position = 'fixed';
+        alertDiv.style.top = '20px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '1000';
+        alertDiv.style.minWidth = '300px';
+        
+        alertDiv.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        
+        document.body.appendChild(alertDiv);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+});
+</script>
+{% endblock %}

@@ -13,12 +13,17 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
-    # Enregistrement explicite de tes services
     App\Service\Impl\CommandeServiceImpl:
         public: true
 
-    # Alias pour l'interface - lie l'interface à l'implémentation
     App\Service\CommandeService:
         alias: App\Service\Impl\CommandeServiceImpl
         public: true
+    App\Service\Impl\LivraisonServiceImpl:
+        arguments:
+            $em: '@doctrine.orm.entity_manager'
+            $commandeRepository: '@App\Repository\CommandeRepository'
+            $zoneRepository: '@App\Repository\ZoneRepository'
+            $livreurRepository: '@App\Repository\LivreurRepository'
+    
+    App\Service\LivraisonService: '@App\Service\Impl\LivraisonServiceImpl'

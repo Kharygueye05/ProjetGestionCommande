@@ -1,0 +1,133 @@
+<div class="section-header">
+    <h2 class="section-title">Livreurs</h2>
+    <button class="add-livreur-btn" disabled title="Fonctionnalité disponible en Java">
+        <iconify-icon icon="ic:baseline-plus"></iconify-icon>
+        <span>Ajouter un Livreur</span>
+    </button>
+</div>
+
+{% if livreurs|length > 0 %}
+<div class="livreurs-grid">
+    {% for livreur in livreurs %}
+    <div class="livreur-card">
+        <h3 class="livreur-name">{{ livreur.prenom }} {{ livreur.nom }}</h3>
+        <div class="livreur-phone">{{ livreur.telephone }}</div>
+        <div class="livreur-actions">
+            <button class="livreur-btn btn-modifier" disabled title="Fonctionnalité disponible en Java">
+                <iconify-icon icon="system-uicons:write"></iconify-icon>
+                <span>Modifier</span>
+            </button>
+            <button class="livreur-btn btn-supprimer" disabled title="Fonctionnalité disponible en Java">
+                <iconify-icon icon="ic:baseline-delete"></iconify-icon>
+                <span>Supprimer</span>
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <iconify-icon icon="octicon:person-16" width="64" height="64"></iconify-icon>
+    <div class="empty-state-title">Aucun livreur</div>
+</div>
+{% endif %}
+
+<style>
+.livreurs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(282px, 1fr));
+    gap: 26px; /* Espacement exact Figma */
+}
+
+.livreur-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.25);
+    padding: 20px;
+    height: 185px; /* Hauteur exacte Figma */
+    position: relative;
+}
+
+.livreur-name {
+    font-family: 'Geist', sans-serif;
+    font-size: 17px;
+    font-weight: 900;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.livreur-phone {
+    font-family: 'Manrope', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 30px;
+}
+
+.livreur-actions {
+    display: flex;
+    gap: 23px; /* Espacement exact Figma */
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+}
+
+.livreur-btn {
+    flex: 1;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'Poppins', sans-serif;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    opacity: 0.6;
+}
+
+.livreur-btn iconify-icon {
+    font-size: 16px;
+}
+
+.add-livreur-btn {
+    background-color: #FFD700; /* Jaune Figma */
+    color: black; /* Noir Figma */
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 38px; /* Hauteur exacte Figma */
+    opacity: 0.6;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #F9FAFB;
+    border-radius: 15px;
+}
+
+.empty-state iconify-icon {
+    font-size: 64px;
+    color: #D1D5DB;
+    margin-bottom: 20px;
+}
+
+.empty-state-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #6B7280;
+    margin-bottom: 10px;
+}
+</style>
