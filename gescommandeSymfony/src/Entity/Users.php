@@ -21,6 +21,11 @@ class Users
 
     #[ORM\Column(length: 20)]
     private ?string $telephone = null;
+    
+    public function __toString(): string
+    {
+        return $this->prenom . ' ' . $this->nom;
+    }
 
     public function getId(): ?int
     {

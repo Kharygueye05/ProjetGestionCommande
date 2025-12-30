@@ -78,7 +78,26 @@ class LivraisonController extends AbstractController
     public function affectations(): Response
     {
         $zonesNonAffecteesData = $this->livraisonService->getZonesNonAffectees();
-        $zonesNonAffecteesDto = ZoneDto::fromEntities($zonesNonAffecteesData);
+        $zonesNonAffecteesDto = [];
+        
+        foreach ($zonesNonAffecteesData as $zoneData) {
+            $dto = new ZoneDto();
+            $dto->id = $zoneData['zone']->getId();
+            $dto->nomZone = $zoneData['zone']->getNomZone();
+            $dto->prixLivraison = (float)$zoneData['zone']->getPrixLivraison();
+            
+            $quartiers = $zoneData['zone']->getQuartiers();
+            if ($quartiers) {
+                $dto->quartiers = array_map('trim', explode(',', $quartiers));
+            } else {
+                $dto->quartiers = [];
+            }
+            
+            $dto->nombreCommandes = count($zoneData['commandes']);
+            $dto->estAffectee = false;
+            
+            $zonesNonAffecteesDto[] = $dto;
+        }
         
         $zonesAffecteesData = $this->livraisonService->getZonesAffectees();
         
@@ -100,9 +119,12 @@ class LivraisonController extends AbstractController
                 $quartiers = $zoneData['zone']->getQuartiers();
                 if ($quartiers) {
                     $zoneDto->quartiers = array_map('trim', explode(',', $quartiers));
+                } else {
+                    $zoneDto->quartiers = [];
                 }
                 
                 $zoneDto->nombreCommandes = count($zoneData['commandes']);
+                $zoneDto->estAffectee = true;
                 $zonesAffecteesDto[] = $zoneDto;
             }
             
@@ -119,7 +141,6 @@ class LivraisonController extends AbstractController
             'allLivreurs' => $allLivreurs
         ]);
     }
-
     #[Route('/affecter', name: 'app_livraisons_affecter', methods: ['POST'])]
     public function affecter(Request $request): JsonResponse
     {

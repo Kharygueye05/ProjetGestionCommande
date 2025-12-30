@@ -4,19 +4,21 @@ namespace App\Entity;
 
 use App\Repository\GestionnaireRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: GestionnaireRepository::class)]
-class Gestionnaire
+class Gestionnaire implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\OneToOne]
     #[ORM\JoinColumn(name: "id", referencedColumnName: "id")]
     private ?Users $user = null;
 
-    #[ORM\Column(length: 150)]
+    #[ORM\Column(length: 150, unique: true)]
     private ?string $email = null;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column]
     private ?string $password = null;
 
     public function getUser(): ?Users
@@ -41,7 +43,7 @@ class Gestionnaire
         return $this;
     }
 
-    public function getPassword(): ?string
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -52,13 +54,30 @@ class Gestionnaire
         return $this;
     }
     
-    public function getId(): ?int
+    public function getUserIdentifier(): string
     {
-        return $this->user?->getId();
+        return (string) $this->email;
     }
-    
-    public function getNom(): ?string
+
+    public function getRoles(): array
     {
-        return $this->user?->getNom();
+        return ['ROLE_GESTIONNAIRE'];
+    }
+
+    public function eraseCredentials(): void
+    {
+        
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return $this->getUserIdentifier();
+    }
+    public function __toString(): string
+    {
+        return $this->email ?: 'Gestionnaire';
     }
 }

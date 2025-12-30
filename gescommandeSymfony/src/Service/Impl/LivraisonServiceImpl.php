@@ -44,6 +44,8 @@ class LivraisonServiceImpl implements LivraisonService
             $commandesZone = array_filter($commandesALivrer, fn($c) => $c->getZone()?->getId() === $zone->getId());
             
             if (!empty($commandesZone)) {
+                $commandesZone = array_values($commandesZone);
+                
                 $zonesAvecCommandes[] = [
                     'zone' => $zone,
                     'commandes' => $commandesZone,
@@ -59,15 +61,17 @@ class LivraisonServiceImpl implements LivraisonService
     public function getZonesNonAffectees(): array
     {
         $zonesAvecCommandes = $this->getZonesAvecCommandes();
-        return array_filter($zonesAvecCommandes, fn($z) => !$z['est_affectee']);
+        return array_filter($zonesAvecCommandes, function($z) {
+            return isset($z['est_affectee']) && !$z['est_affectee'];
+        });
     }
-
     public function getZonesAffectees(): array
     {
         $zonesAvecCommandes = $this->getZonesAvecCommandes();
-        $zonesAffectees = array_filter($zonesAvecCommandes, fn($z) => $z['est_affectee']);
+        $zonesAffectees = array_filter($zonesAvecCommandes, function($z) {
+            return isset($z['est_affectee']) && $z['est_affectee'];
+        });
         
-        // Grouper par livreur
         $zonesParLivreur = [];
         foreach ($zonesAffectees as $zoneData) {
             $livreur = $zoneData['livreur_affecte'];
@@ -85,7 +89,6 @@ class LivraisonServiceImpl implements LivraisonService
         
         return array_values($zonesParLivreur);
     }
-
     public function getLivreursAvecCommandes(): array
     {
         $livreurs = $this->livreurRepository->findAll();
