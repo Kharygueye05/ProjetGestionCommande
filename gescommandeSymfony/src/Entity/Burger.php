@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\BurgerRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BurgerRepository::class)]
@@ -17,14 +16,17 @@ class Burger
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
-    #[ORM\Column]
-    private ?bool $archive = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
     private ?string $prix = null;
+
+    #[ORM\Column]
+    private ?bool $archive = false;
 
     public function getId(): ?int
     {
@@ -39,7 +41,17 @@ class Burger
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+        return $this;
+    }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -51,19 +63,6 @@ class Burger
     public function setImage(?string $image): static
     {
         $this->image = $image;
-
-        return $this;
-    }
-
-    public function isArchive(): ?bool
-    {
-        return $this->archive;
-    }
-
-    public function setArchive(bool $archive): static
-    {
-        $this->archive = $archive;
-
         return $this;
     }
 
@@ -75,7 +74,17 @@ class Burger
     public function setPrix(string $prix): static
     {
         $this->prix = $prix;
+        return $this;
+    }
 
+    public function isArchive(): ?bool
+    {
+        return $this->archive;
+    }
+
+    public function setArchive(bool $archive): static
+    {
+        $this->archive = $archive;
         return $this;
     }
 }

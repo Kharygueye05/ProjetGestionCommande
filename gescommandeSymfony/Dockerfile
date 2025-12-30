@@ -23,3 +23,6 @@ EXPOSE 8000
 
 # Lancer le serveur intégré Symfony
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+
+
+

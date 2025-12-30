@@ -9,23 +9,24 @@
         display: flex;
         gap: 0;
         margin-bottom: 40px;
-        border-bottom: none;
+        overflow-x: auto;
     }
-    
+
     .tab-btn {
         background: transparent;
         border: none;
-        padding: 12px 20px;
+        padding: 12px 15px;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         cursor: pointer;
         font-family: 'Poppins', sans-serif;
-        font-size: 20px;
+        font-size: 18px;
         font-weight: 700;
         color: rgba(115,116,114,0.89);
         border-bottom: 2px solid transparent;
         transition: all 0.3s;
+        white-space: nowrap;
     }
     
     .tab-btn iconify-icon {
@@ -95,11 +96,9 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', function() {
             const tabName = this.getAttribute('data-tab');
             
-            // Mettre à jour les classes actives
             tabButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // Charger le contenu de l'onglet
             loadTabContent(tabName);
         });
     });
@@ -131,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(html => {
                 tabContent.innerHTML = html;
                 
-                // Réinitialiser les événements pour les nouveaux éléments
                 if (tabName === 'affectations') {
                     initAffectationEvents();
                 }
@@ -191,7 +189,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 showAlert(data.message, 'success');
-                // Recharger l'onglet affectations
                 loadTabContent('affectations');
             } else {
                 showAlert(data.message, 'error');
@@ -216,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 showAlert(data.message, 'success');
-                // Recharger l'onglet affectations
                 loadTabContent('affectations');
             } else {
                 showAlert(data.message, 'error');

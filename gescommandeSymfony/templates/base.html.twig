@@ -34,10 +34,19 @@
             flex-direction: column;
         }
 
+        .main-content {
+            margin-left: 260px;
+            padding: 24px 32px;
+            background-color: white;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+
         .logo-container {
             margin-bottom: 30px;
             text-align: center;
-            height: 80px; /* Hauteur fixe réduite */
+            height: 80px; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -64,14 +73,14 @@
         .menu-item {
             display: flex;
             align-items: center;
-            padding: 10px 8px; /* Réduit de 12px */
-            height: 45px; /* Réduit de 50px */
+            padding: 10px 8px; 
+            height: 50px; 
             border-radius: 8px;
             color: #E5E7EB;
             text-decoration: none;
-            font-size: 16px; /* Réduit de 18px */
+            font-size: 16px;
             font-weight: 400;
-            margin-bottom: 10px; /* Réduit de 15px */
+            margin-bottom: 10px; 
             transition: background-color 0.3s;
         }
 
@@ -87,10 +96,10 @@
         }
 
         .menu-item iconify-icon {
-            font-size: 20px; /* Réduit de 24px */
+            font-size: 24px;
             width: 20px;
             height: 20px;
-            margin-right: 10px; /* Réduit de 14px */
+            margin-right: 14px; 
         }
 
         .logout-btn {
@@ -98,33 +107,25 @@
             color: black;
             border: none;
             border-radius: 30px;
-            padding: 8px 16px; /* Réduit de 10px 20px */
+            padding: 10px 20px; 
             display: flex;
             align-items: center;
             justify-content: center;
             width: 100%;
-            font-size: 16px; /* Réduit de 18px */
+            font-size: 18px; 
             font-weight: 400;
             cursor: pointer;
             margin-top: auto;
         }
 
         .logout-btn iconify-icon {
-            font-size: 20px; /* Réduit de 24px */
+            font-size: 24px; 
             width: 20px;
             height: 20px;
-            margin-right: 8px; /* Réduit de 10px */
+            margin-right: 10px;
             transform: rotate(180deg);
         }
 
-        .main-content {
-            margin-left: 260px;
-            padding: 30px; /* Réduit de 40px */
-            background-color: white;
-            min-height: 100vh;
-            max-width: calc(100vw - 260px);
-            overflow-x: hidden;
-        }
 
         @media (max-width: 768px) {
             .sidebar {
@@ -411,23 +412,27 @@
             z-index: 1000;
             min-width: 300px;
         }
+        .stats-cards {
+            box-sizing: border-box !important;
+        }
+
+        .stat-card {
+            box-sizing: border-box !important;
+        }
         
-        {% block stylesheets %}{% endblock %}
     </style>
+    {% block stylesheets %}{% endblock %}
     
     {% block head %}{% endblock %}
 </head>
 <body>
     <aside class="sidebar">
         <div>
-            <!-- Logo réduit -->
             <div class="logo-container">
-                
-                <img src="{{ asset('images/logo.png') }}" alt="Brasil Burger Logo" class="sidebar-logo"
+                <img src="{{ asset('images/logo.png') }}" alt="Brasil Burger Logo" class="sidebar-logo">
             </div>
         </div>
         
-        <!-- Menu avec défilement si nécessaire -->
         <div class="menu-wrapper">
             <nav class="menu-nav">
                 <a href="{{ path('app_dashboard') }}" 
@@ -435,15 +440,18 @@
                     <iconify-icon icon="pixelarticons:dashboard"></iconify-icon>
                     <span>Dashboard</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ path('app_burgers_index') }}" 
+                class="menu-item {{ app.request.attributes.get('_route') == 'app_burgers_index' ? 'active' : '' }}">
                     <iconify-icon icon="lucide-lab:burger"></iconify-icon>
                     <span>Burgers</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ path('app_menus_index') }}" 
+                class="menu-item {{ app.request.attributes.get('_route') == 'app_menus_index' ? 'active' : '' }}">
                     <iconify-icon icon="mdi:burger"></iconify-icon>
                     <span>Menus</span>
                 </a>
-                <a href="#" class="menu-item">
+                <a href="{{ path('app_complements_index') }}" 
+                class="menu-item {{ app.request.attributes.get('_route') == 'app_complements_index' ? 'active' : '' }}">
                     <iconify-icon icon="healthicons:unhealthy-food-outline"></iconify-icon>
                     <span>Compléments</span>
                 </a>
@@ -460,8 +468,7 @@
             </nav>
         </div>
         
-        <!-- Bouton déconnexion -->
-        <form method="post" action="{{ path('app_logout') }}" style="width: 100%;">
+$        <form method="post" action="{{ path('app_logout') }}" style="width: 100%;">
             <button type="submit" class="logout-btn">
                 <iconify-icon icon="ic:outline-logout"></iconify-icon>
                 <span>Déconnexion</span>

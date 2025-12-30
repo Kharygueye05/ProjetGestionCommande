@@ -16,6 +16,9 @@ class Menu
     #[ORM\Column(length: 100)]
     private ?string $nom = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image = null;
 
@@ -47,7 +50,17 @@ class Menu
     public function setNom(string $nom): static
     {
         $this->nom = $nom;
+        return $this;
+    }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
         return $this;
     }
 
@@ -59,7 +72,6 @@ class Menu
     public function setImage(?string $image): static
     {
         $this->image = $image;
-
         return $this;
     }
 
@@ -71,7 +83,6 @@ class Menu
     public function setArchive(bool $archive): static
     {
         $this->archive = $archive;
-
         return $this;
     }
 
@@ -83,7 +94,6 @@ class Menu
     public function setBurger(?Burger $burger): static
     {
         $this->burger = $burger;
-
         return $this;
     }
 
@@ -95,7 +105,6 @@ class Menu
     public function setComplementBoisson(?Complement $complementBoisson): static
     {
         $this->complementBoisson = $complementBoisson;
-
         return $this;
     }
 
@@ -107,25 +116,23 @@ class Menu
     public function setComplementFrites(?Complement $complementFrites): static
     {
         $this->complementFrites = $complementFrites;
-
         return $this;
     }
-    
 
     public function getPrixTotal(): float
     {
         $total = 0;
         
         if ($this->burger) {
-            $total += $this->burger->getPrix();
+            $total += (float) $this->burger->getPrix();
         }
         
         if ($this->complementBoisson) {
-            $total += $this->complementBoisson->getPrix();
+            $total += (float) $this->complementBoisson->getPrix();
         }
         
         if ($this->complementFrites) {
-            $total += $this->complementFrites->getPrix();
+            $total += (float) $this->complementFrites->getPrix();
         }
         
         return $total;

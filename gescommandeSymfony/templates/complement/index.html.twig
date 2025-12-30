@@ -1,0 +1,350 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Compléments - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="section-header">
+    <h2 class="section-title">Gestion des Compléments</h2>
+    <button class="add-complement-btn" disabled title="Fonctionnalité disponible en Java">
+        <iconify-icon icon="ic:baseline-plus"></iconify-icon>
+        <span>Nouveau complément</span>
+    </button>
+</div>
+
+{% if complements|length > 0 %}
+<div class="complements-table-container">
+    <table class="complements-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Type</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for complement in complements %}
+            <tr>
+                <td class="complement-image-cell">
+                    {% if complement.image %}
+                        <img src="{{ complement.image }}" 
+                             alt="{{ complement.nom }}" 
+                             class="complement-image"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="default-complement-image" style="display: none;">
+                            {% if complement.type == 'boisson' %}
+                                <iconify-icon icon="mdi:cup"></iconify-icon>
+                            {% else %}
+                                <iconify-icon icon="mdi:french-fries"></iconify-icon>
+                            {% endif %}
+                        </div>
+                    {% else %}
+                        <div class="default-complement-image">
+                            {% if complement.type == 'boisson' %}
+                                <iconify-icon icon="mdi:cup"></iconify-icon>
+                            {% else %}
+                                <iconify-icon icon="mdi:french-fries"></iconify-icon>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="complement-name-cell">{{ complement.nom }}</td>
+                <td class="complement-type-cell">
+                    <span class="type-badge type-{{ complement.type }}">
+                        {% if complement.type == 'boisson' %}
+                            <iconify-icon icon="mdi:cup"></iconify-icon>
+                            Boisson
+                        {% else %}
+                            <iconify-icon icon="mdi:french-fries"></iconify-icon>
+                            Frites
+                        {% endif %}
+                    </span>
+                </td>
+                <td class="complement-price-cell">{{ complement.prix|number_format(0, ',', ' ') }} FCFA</td>
+                <td class="complement-status-cell">
+                    {% if complement.archive %}
+                        <span class="status-badge status-archived">
+                            Archivé
+                        </span>
+                    {% else %}
+                        <span class="status-badge status-active">
+                            Actif
+                        </span>
+                    {% endif %}
+                </td>
+                <td class="complement-actions-cell">
+                    {% if not complement.archive %}
+                    <div class="actions-container">
+                        <button class="action-btn btn-modifier" disabled title="Modifier (Java)">
+                            <iconify-icon icon="system-uicons:write"></iconify-icon>
+                        </button>
+                        <button class="action-btn btn-supprimer" disabled title="Archiver (Java)">
+                            <iconify-icon icon="mdi:archive-arrow-down"></iconify-icon>
+                        </button>
+                    </div>
+                    {% else %}
+                    <span class="text-muted small">Archivé</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <iconify-icon icon="healthicons:unhealthy-food-outline" width="64" height="64"></iconify-icon>
+    <div class="empty-state-title">Aucun complément trouvé</div>
+    <p class="empty-state-text">Les compléments sont gérés via l'application Java</p>
+</div>
+{% endif %}
+
+<style>
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #111827;
+    margin: 0;
+}
+
+.add-complement-btn {
+    background-color: #FFD700;
+    color: #111827;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.6;
+}
+
+.complements-table-container {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.complements-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.complements-table thead {
+    background-color: #E5E7EB;
+}
+
+.complements-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: black;
+    border: none;
+}
+
+.complements-table td {
+    padding: 20px 16px;
+    background-color: white;
+    border-bottom: 1px solid #F3F4F6;
+    vertical-align: middle;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #323C47;
+}
+
+.complements-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.complement-image-cell {
+    width: 80px;
+    position: relative;
+}
+
+.complement-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.default-complement-image {
+    width: 60px;
+    height: 60px;
+    background-color: #f3f4f6;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.default-complement-image iconify-icon {
+    font-size: 24px;
+    color: #9ca3af;
+}
+
+.complement-name-cell {
+    font-weight: 500;
+    min-width: 150px;
+}
+
+.complement-type-cell {
+    min-width: 120px;
+}
+
+.type-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.type-boisson {
+    background-color: rgba(59, 130, 246, 0.13);
+    color: rgba(59, 130, 246, 0.63);
+}
+
+.type-frites {
+    background-color: rgba(249, 115, 22, 0.13);
+    color: rgba(249, 115, 22, 0.63);
+}
+
+.complement-price-cell {
+    font-weight: 600;
+    color: #111827;
+    min-width: 100px;
+}
+
+.complement-status-cell {
+    min-width: 80px;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-active {
+    background-color: rgba(0, 255, 94, 0.13);
+    color: rgba(0, 255, 94, 0.63);
+}
+
+.status-archived {
+    background-color: rgba(255, 193, 7, 0.13);
+    color: rgba(255, 193, 7, 0.63);
+}
+
+.complement-actions-cell {
+    width: 100px;
+}
+
+.actions-container {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: not-allowed;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+}
+
+.action-btn iconify-icon {
+    font-size: 24px;
+    color: black;
+}
+
+.btn-modifier iconify-icon {
+    color: #4b5563;
+}
+
+.btn-supprimer iconify-icon {
+    color: #ef4444;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #F9FAFB;
+    border-radius: 15px;
+}
+
+.empty-state iconify-icon {
+    font-size: 64px;
+    color: #D1D5DB;
+    margin-bottom: 20px;
+}
+
+.empty-state-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #6B7280;
+    margin-bottom: 10px;
+}
+
+.empty-state-text {
+    color: #9CA3AF;
+    font-size: 14px;
+}
+
+.text-muted {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.small {
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    
+    .add-complement-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .complements-table-container {
+        overflow-x: auto;
+    }
+    
+    .complements-table {
+        min-width: 800px;
+    }
+}
+</style>
+{% endblock %}

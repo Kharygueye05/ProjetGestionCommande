@@ -1,5 +1,4 @@
 <?php
-// src/DTO/ZoneDto.php
 namespace App\DTO;
 
 use App\Entity\Zone;

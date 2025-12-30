@@ -1,0 +1,316 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Burgers - Brasil Burger{% endblock %}
+
+{% block body %}
+<div class="section-header">
+    <h2 class="section-title">Gestion des Burgers</h2>
+    <button class="add-burger-btn" disabled title="Fonctionnalité disponible en Java">
+        <iconify-icon icon="ic:baseline-plus"></iconify-icon>
+        <span>Nouveau burger</span>
+    </button>
+</div>
+
+{% if burgers|length > 0 %}
+<div class="burgers-table-container">
+    <table class="burgers-table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Prix</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for burger in burgers %}
+            <tr>
+                <td class="burger-image-cell">
+                    {% if burger.image %}
+                        <img src="{{ burger.image }}" 
+                             alt="{{ burger.nom }}" 
+                             class="burger-image"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="default-burger-image" style="display: none;">
+                            <iconify-icon icon="lucide-lab:burger"></iconify-icon>
+                        </div>
+                    {% else %}
+                        <div class="default-burger-image">
+                            <iconify-icon icon="lucide-lab:burger"></iconify-icon>
+                        </div>
+                    {% endif %}
+                </td>
+                <td class="burger-name-cell">{{ burger.nom }}</td>
+                <td class="burger-description-cell">
+                    {{ burger.description|default('Aucune description')|slice(0, 60) }}
+                    {% if burger.description|default('')|length > 60 %}...{% endif %}
+                </td>
+                <td class="burger-price-cell">{{ burger.prix|number_format(0, ',', ' ') }} FCFA</td>
+                <td class="burger-status-cell">
+                    {% if burger.archive %}
+                        <span class="status-badge status-archived">
+                            Archivé
+                        </span>
+                    {% else %}
+                        <span class="status-badge status-active">
+                            Actif
+                        </span>
+                    {% endif %}
+                </td>
+                <td class="burger-actions-cell">
+                    {% if not burger.archive %}
+                    <div class="actions-container">
+                        <button class="action-btn btn-modifier" disabled title="Modifier (Java)">
+                            <iconify-icon icon="system-uicons:write"></iconify-icon>
+                        </button>
+                        <button class="action-btn btn-supprimer" disabled title="Archiver (Java)">
+                            <iconify-icon icon="mdi:archive-arrow-down"></iconify-icon>
+                        </button>
+                    </div>
+                    {% else %}
+                    <span class="text-muted small">Archivé</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="empty-state">
+    <iconify-icon icon="lucide-lab:burger" width="64" height="64"></iconify-icon>
+    <div class="empty-state-title">Aucun burger trouvé</div>
+    <p class="empty-state-text">Les burgers sont gérés via l'application Java</p>
+</div>
+{% endif %}
+
+<style>
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.section-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 24px;
+    font-weight: 900;
+    color: #111827;
+    margin: 0;
+}
+
+.add-burger-btn {
+    background-color: #FFD700;
+    color: #111827;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.6;
+}
+
+.burgers-table-container {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.burgers-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.burgers-table thead {
+    background-color: #E5E7EB;
+}
+
+.burgers-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: black;
+    border: none;
+}
+
+.burgers-table td {
+    padding: 20px 16px;
+    background-color: white;
+    border-bottom: 1px solid #F3F4F6;
+    vertical-align: middle;
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #323C47;
+}
+
+.burgers-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.burger-image-cell {
+    width: 80px;
+    position: relative;
+}
+
+.burger-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.default-burger-image {
+    width: 60px;
+    height: 60px;
+    background-color: #f3f4f6;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.default-burger-image iconify-icon {
+    font-size: 24px;
+    color: #9ca3af;
+}
+
+.burger-name-cell {
+    font-weight: 500;
+    min-width: 150px;
+}
+
+.burger-description-cell {
+    max-width: 300px;
+    color: #6b7280;
+}
+
+.burger-price-cell {
+    font-weight: 600;
+    color: #111827;
+    min-width: 100px;
+}
+
+.burger-status-cell {
+    min-width: 80px;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.status-active {
+    background-color: rgba(0, 255, 94, 0.13);
+    color: rgba(0, 255, 94, 0.63);
+}
+
+.status-archived {
+    background-color: rgba(255, 193, 7, 0.13);
+    color: rgba(255, 193, 7, 0.63);
+}
+
+.burger-actions-cell {
+    width: 100px;
+}
+
+.actions-container {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    cursor: not-allowed;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+}
+
+.action-btn iconify-icon {
+    font-size: 24px;
+    color: black;
+}
+
+.btn-modifier iconify-icon {
+    color: #4b5563;
+}
+
+.btn-supprimer iconify-icon {
+    color: #ef4444;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #F9FAFB;
+    border-radius: 15px;
+}
+
+.empty-state iconify-icon {
+    font-size: 64px;
+    color: #D1D5DB;
+    margin-bottom: 20px;
+}
+
+.empty-state-title {
+    font-family: 'Geist', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #6B7280;
+    margin-bottom: 10px;
+}
+
+.empty-state-text {
+    color: #9CA3AF;
+    font-size: 14px;
+}
+
+.text-muted {
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.small {
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+    }
+    
+    .add-burger-btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .burgers-table-container {
+        overflow-x: auto;
+    }
+    
+    .burgers-table {
+        min-width: 800px;
+    }
+}
+</style>
+{% endblock %}
