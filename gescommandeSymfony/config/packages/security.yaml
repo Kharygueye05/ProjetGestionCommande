@@ -1,9 +1,11 @@
 security:
+    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Entity\Gestionnaire:
             algorithm: auto
 
+    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
             entity:
@@ -23,13 +25,15 @@ security:
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: app_dashboard
+                
                 username_parameter: email
                 password_parameter: password
+                
             logout:
                 path: app_logout
                 target: app_login
+        
 
     access_control:
         - { path: ^/login$, roles: PUBLIC_ACCESS }
-        - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_GESTIONNAIRE }
