@@ -1,28 +1,24 @@
-# Utiliser l'image PHP 8.4 CLI officielle
+# Dockerfile
 FROM php:8.4-cli
 
-# Installer dépendances système nécessaires à Symfony
-RUN apt-get update && apt-get install -y \
-    git unzip libicu-dev libzip-dev zip curl \
-    && docker-php-ext-install intl zip pdo pdo_mysql
+# Installer les bases
+RUN apt-get update && apt-get install -y unzip git curl
 
-# Installer Composer globalement
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Installer Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Définir le répertoire de travail
+# Copier tout le projet
 WORKDIR /app
-
-# Copier tous les fichiers du projet
 COPY . .
 
-# Installer les dépendances PHP du projet
-RUN composer install --optimize-autoloader
+# Installer les dépendances (sans dev)
+RUN composer install --no-dev --optimize-autoloader
 
-# Exposer le port pour Symfony
-EXPOSE 8000
+# Nettoyer le cache
+RUN rm -rf var/cache/*
 
-# Lancer le serveur intégré Symfony
+# Reconstruire le cache de production
+RUN APP_ENV=prod php bin/console cache:clear
+
+# Démarrer le serveur
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
-
-
-
