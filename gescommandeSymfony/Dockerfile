@@ -1,4 +1,6 @@
-FROM php:8.4-apache
+FROM php:8.4-cli
+
+# Dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -15,26 +17,23 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-enable pdo_pgsql \
     && apt-get clean
 
-RUN a2enmod rewrite
-
+# Installer Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-WORKDIR /var/www/html
+# Dossier de travail
+WORKDIR /app
 
+# Copier le projet Symfony
 COPY . .
 
+# Installer dépendances DEV
 RUN composer install --no-interaction
 
-# Vérification CRITIQUE
-RUN php -m | grep -i pgsql && echo "✅ PostgreSQL OK"
+# Vérification du driver PostgreSQL
+RUN php -m | grep -i pgsql && echo "✅ PostgreSQL driver OK"
 
-ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
+# Exposer le port utilisé par PHP
+EXPOSE 8000
 
-# Permissions Symfony
-RUN chown -R www-data:www-data var
-
-EXPOSE 80
-
-CMD ["apache2-foreground"]
+# Lancer Symfony avec le serveur PHP intégré
+CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
