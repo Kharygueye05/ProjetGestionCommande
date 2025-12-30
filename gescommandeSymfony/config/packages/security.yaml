@@ -1,11 +1,9 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Entity\Gestionnaire:
             algorithm: auto
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         app_user_provider:
             entity:
@@ -25,22 +23,13 @@ security:
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: app_dashboard
-                
-                # Personnalisation du formulaire
                 username_parameter: email
                 password_parameter: password
-                
             logout:
                 path: app_logout
                 target: app_login
-            
-            # activation des différentes façons de s'authentifier
-            # https://symfony.com/doc/current/security.html#the-firewall
 
-    # Facile de contrôler l'accès pour de grandes sections de votre site
-    # Remarque: Seul le PREMIER contrôle d'accès correspondant sera utilisé
     access_control:
-        # Autoriser l'accès à la page de login pour tous
         - { path: ^/login$, roles: PUBLIC_ACCESS }
-        # Protéger toutes les autres routes
+        - { path: ^/$, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_GESTIONNAIRE }
