@@ -1,13 +1,11 @@
 security:
-    # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
         App\Entity\Gestionnaire:
             algorithm: auto
 
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        app_user_provider:
+        gestionnaire_provider:
             entity:
                 class: App\Entity\Gestionnaire
                 property: 'email'
@@ -19,21 +17,28 @@ security:
         
         main:
             lazy: true
-            provider: app_user_provider
+            provider: gestionnaire_provider
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
                 default_target_path: app_dashboard
+                always_use_default_target_path: true
                 
-                username_parameter: email
-                password_parameter: password
+                username_parameter: email  
+                password_parameter: password  
                 
             logout:
                 path: app_logout
                 target: app_login
-        
-
+            
     access_control:
         - { path: ^/login$, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_GESTIONNAIRE }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        
+        - { path: ^/dashboard, roles: ROLE_GESTIONNAIRE }
+        - { path: ^/burgers, roles: ROLE_GESTIONNAIRE }
+        - { path: ^/menus, roles: ROLE_GESTIONNAIRE }
+        - { path: ^/complements, roles: ROLE_GESTIONNAIRE }
+        - { path: ^/commande, roles: ROLE_GESTIONNAIRE }
+        - { path: ^/livraisons, roles: ROLE_GESTIONNAIRE }

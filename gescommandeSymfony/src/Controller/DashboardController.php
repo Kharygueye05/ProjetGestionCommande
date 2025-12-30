@@ -1,11 +1,12 @@
 <?php
 namespace App\Controller;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Repository\CommandeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[IsGranted('ROLE_GESTIONNAIRE')]
 class DashboardController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_dashboard')]

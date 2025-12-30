@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\DTO\ZoneDto;
 use App\DTO\LivreurDto;
 use App\Service\LivraisonService;
@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/livraisons')]
+#[IsGranted('ROLE_GESTIONNAIRE')]
 class LivraisonController extends AbstractController
 {
     private $livraisonService;

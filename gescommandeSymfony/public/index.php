@@ -2,8 +2,6 @@
 
 use App\Kernel;
 
-header('Location: /login');
-exit;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 

@@ -1,24 +1,20 @@
-# Dockerfile
 FROM php:8.4-cli
 
-# Installer les bases
-RUN apt-get update && apt-get install -y unzip git curl
+RUN apt-get update && apt-get install -y \
+    git unzip libicu-dev libzip-dev zip curl \
+    && docker-php-ext-install intl zip pdo pdo_mysql
 
-# Installer Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Copier tout le projet
 WORKDIR /app
+
 COPY . .
 
-# Installer les dépendances (sans dev)
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
-# Nettoyer le cache
-RUN rm -rf var/cache/*
+EXPOSE 8000
 
-# Reconstruire le cache de production
-RUN APP_ENV=prod php bin/console cache:clear
-
-# Démarrer le serveur
 CMD ["php", "-S", "0.0.0.0:8000", "-t", "public"]
+
+
+
